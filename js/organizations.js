@@ -216,7 +216,7 @@ async function showOrgForm(orgId) {
 
       <div class="form-group">
         <label class="form-label">ชื่อองค์กร <span class="required">*</span></label>
-        <input type="text" class="form-input" name="name" value="${escapeHtml(org.name || '')}" placeholder="เช่น สหกรณ์การเกษตรเมืองเชียงใหม่ จำกัด" required>
+        <input type="text" class="form-input" name="name" value="${escapeHtml(org.name || '')}" placeholder="เช่น สหกรณ์การเกษตรเมืองระยอง จำกัด" required>
       </div>
 
       <div class="form-row">
@@ -535,7 +535,7 @@ function showImportForm() {
         (1 บรรทัด = 1 รายการ)
       </p>
       <textarea id="importDataTextarea" class="form-textarea" style="min-height: 250px; font-family: monospace; font-size: 0.85rem;" 
-                placeholder="ตัวอย่าง:\nสหกรณ์การเกษตร A, สหกรณ์การเกษตร, สหกรณ์, เชียงใหม่\nกลุ่มเกษตรกร B, กลุ่มเกษตรกร, กลุ่มเกษตรกร, เชียงราย"></textarea>
+                placeholder="ตัวอย่าง:\nสหกรณ์การเกษตร A, สหกรณ์การเกษตร, สหกรณ์, ระยอง\nกลุ่มเกษตรกร B, กลุ่มเกษตรกร, กลุ่มเกษตรกร, ระยอง"></textarea>
     </div>
     <div class="form-actions" style="margin-top: 0; padding-top: 16px;">
       <button type="button" class="btn btn-secondary" onclick="closeModal()">ยกเลิก</button>
