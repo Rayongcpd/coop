@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="ระบบจัดการข้อมูลสหกรณ์และกลุ่มเกษตรกร - Dashboard สรุปข้อมูล จำนวนสมาชิก และธุรกิจ">
+  <title>ระบบจัดการข้อมูลสหกรณ์และกลุ่มเกษตรกร</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Sans+Thai:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="logo">
+        <div class="logo-icon-wrap">
+          <span class="material-symbols-rounded logo-icon">agriculture</span>
+        </div>
+        <div class="logo-text">
+          <h1>สหกรณ์</h1>
+          <span>Management System</span>
+        </div>
+      </div>
+      <button class="sidebar-close" id="sidebarClose" aria-label="ปิดเมนู">
+        <span class="material-symbols-rounded">close</span>
+      </button>
+    </div>
+
+    <nav class="sidebar-nav" aria-label="Main navigation">
+      <a href="#dashboard" class="nav-item active" data-page="dashboard" id="nav-dashboard">
+        <span class="material-symbols-rounded">dashboard</span>
+        <span class="nav-text">แดชบอร์ด</span>
+      </a>
+      <a href="#organizations" class="nav-item" data-page="organizations" id="nav-organizations">
+        <span class="material-symbols-rounded">apartment</span>
+        <span class="nav-text">สหกรณ์/กลุ่มเกษตรกร</span>
+      </a>
+      <a href="#members" class="nav-item" data-page="members" id="nav-members">
+        <span class="material-symbols-rounded">groups</span>
+        <span class="nav-text">สมาชิก</span>
+      </a>
+      <a href="#reports" class="nav-item" data-page="reports" id="nav-reports">
+        <span class="material-symbols-rounded">bar_chart</span>
+        <span class="nav-text">รายงาน</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-footer" id="sidebarFooter">
+      <!-- Admin area: dynamically rendered by app.js -->
+      <div id="adminArea">
+        <div class="sidebar-info" id="loginTrigger" style="cursor:pointer;" title="Admin">
+          <span class="material-symbols-rounded">info</span>
+          <span>v1.0.0</span>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Overlay for mobile sidebar -->
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <!-- Main Content -->
+  <main class="main-content" id="mainContent">
+    <!-- Top Bar -->
+    <header class="topbar" id="topbar">
+      <div class="topbar-left">
+        <button class="hamburger" id="hamburger" aria-label="เปิดเมนู">
+          <span class="material-symbols-rounded">menu</span>
+        </button>
+        <h2 class="page-title" id="pageTitle">แดชบอร์ด</h2>
+      </div>
+      <div class="topbar-right">
+        <div class="search-box" id="globalSearchBox">
+          <span class="material-symbols-rounded search-icon">search</span>
+          <input type="text" placeholder="ค้นหา..." id="searchInput" autocomplete="off">
+        </div>
+      </div>
+    </header>
+
+    <!-- Page Content -->
+    <div class="page-content" id="pageContent">
+      <!-- Dynamic content rendered by JS -->
+    </div>
+  </main>
+
+  <!-- Modal -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal" id="modal">
+      <div class="modal-header">
+        <h3 class="modal-title" id="modalTitle"></h3>
+        <button class="modal-close" id="modalClose" aria-label="ปิด">
+          <span class="material-symbols-rounded">close</span>
+        </button>
+      </div>
+      <div class="modal-body" id="modalBody"></div>
+    </div>
+  </div>
+
+  <!-- Toast Notifications -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Confirm Dialog -->
+  <div class="confirm-overlay" id="confirmOverlay">
+    <div class="confirm-dialog" id="confirmDialog">
+      <div class="confirm-icon-wrap">
+        <span class="material-symbols-rounded confirm-icon">warning</span>
+      </div>
+      <h3 class="confirm-title" id="confirmTitle">ยืนยันการลบ</h3>
+      <p class="confirm-message" id="confirmMessage">คุณต้องการลบรายการนี้หรือไม่?</p>
+      <div class="confirm-actions">
+        <button class="btn btn-secondary" id="confirmCancel">ยกเลิก</button>
+        <button class="btn btn-danger" id="confirmOk">ลบ</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading Overlay -->
+  <div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-content">
+      <div class="spinner"></div>
+      <p>กำลังโหลด...</p>
+    </div>
+  </div>
+
+  <!-- Scripts (order matters) -->
+  <script src="js/utils.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/dashboard.js"></script>
+  <script src="js/organizations.js"></script>
+  <script src="js/members.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
