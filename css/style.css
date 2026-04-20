@@ -612,38 +612,62 @@ body::before {
 
 table {
   width: 100%;
-  border-collapse: collapse;
-  white-space: nowrap;
+  border-collapse: separate; /* Required for sticky columns in most browsers */
+  border-spacing: 0;
 }
 
 thead {
   background: rgba(30, 41, 59, 0.5);
+  position: sticky;
+  top: 0;
+  z-index: 20;
 }
 
-th {
-  padding: 14px 20px;
-  text-align: left;
-  font-size: 0.78rem;
-  font-weight: 600;
-  color: var(--text-secondary);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  border-bottom: 1px solid var(--border-color);
-}
-
-td {
+th, td {
   padding: 14px 20px;
   font-size: 0.875rem;
   border-bottom: 1px solid var(--border-light);
   color: var(--text-primary);
+  white-space: nowrap; /* Keep data on one line by default */
+  text-align: left;
+}
+
+/* Allow primary text columns (like names) to wrap */
+/* Organizations: 1st column, Members: 2nd column */
+td:nth-child(1), th:nth-child(1),
+td:nth-child(2), th:nth-child(2) {
+  white-space: normal;
+  min-width: 250px;
+  line-height: 1.5;
+}
+
+/* Last column (Actions/Management) - Sticky to the right */
+th:last-child, 
+td:last-child {
+  position: sticky;
+  right: 0;
+  z-index: 10;
+  background: #111827; /* Dark opaque background to cover content underneath */
+  box-shadow: -8px 0 15px rgba(0, 0, 0, 0.4);
+  text-align: center;
+}
+
+th:last-child {
+  background: #1e293b; /* Match thead background */
+  z-index: 21;
 }
 
 tbody tr {
   transition: background var(--duration) var(--ease);
 }
 
-tbody tr:hover {
+tbody tr:hover td {
   background: var(--bg-hover);
+}
+
+/* Specific background for sticky cell on hover */
+tbody tr:hover td:last-child {
+  background: #232e41 !important; /* Opaque hover color for sticky column */
 }
 
 tbody tr:last-child td {
