@@ -222,10 +222,7 @@ async function showOrgForm(orgId) {
       <div class="form-row">
         <div class="form-group">
           <label class="form-label">จังหวัด</label>
-          <select class="form-select" name="province">
-            <option value="">เลือกจังหวัด</option>
-            ${PROVINCES.map(p => `<option value="${p}" ${org.province === p ? 'selected' : ''}>${p}</option>`).join('')}
-          </select>
+          <input type="text" class="form-input" name="province" value="ระยอง" readonly style="background:var(--bg-secondary);cursor:default;">
         </div>
         <div class="form-group">
           <label class="form-label">อำเภอ</label>
@@ -570,7 +567,7 @@ async function handleImportSubmit() {
         name: parts[0],
         type: parts[1],
         category: parts[2],
-        province: parts[3] || '',
+        province: parts[3] || 'ระยอง',
         status: 'ดำเนินการ'
       });
     }
