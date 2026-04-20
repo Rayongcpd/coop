@@ -493,15 +493,3 @@ const Api = {
   // Admin
   verifyAdmin: (password) => apiPost('verifyAdmin', { password }),
 };
- (params = {}) => apiGet('getMembers', params),
-  getMember: (id) => apiGet('getMember', { id }),
-  createMember: (data) => apiPost('createMember', data),
-  updateMember: (data) => apiPost('updateMember', data),
-  deleteMember: (id) => apiPost('deleteMember', { id }),
-
-  // Dashboard
-  getDashboard: () => apiGet('getDashboard'),
-
-  // Admin
-  verifyAdmin: (password) => apiPost('verifyAdmin', { password }),
-};
