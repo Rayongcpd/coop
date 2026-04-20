@@ -25,17 +25,20 @@ async function renderMembers() {
   }
 
   content.innerHTML = `
-    <!-- Organization Selector -->
     <div class="org-selector">
       <label class="form-label">เลือกสหกรณ์/กลุ่มเกษตรกร</label>
+      <div class="search-inline mb-sm">
+        <span class="material-symbols-rounded">search</span>
+        <input type="text" class="form-input" id="orgFilterInput" placeholder="พิมพ์เพื่อค้นหาชื่อสหกรณ์...">
+      </div>
       <select class="form-select" id="memberOrgSelect">
         <option value="">— เลือกองค์กร —</option>
-        <optgroup label="สหกรณ์">
+        <optgroup label="สหกรณ์" id="coopOptGroup">
           ${orgs.filter(o => o.category === 'สหกรณ์').map(o =>
             `<option value="${o.id}" ${memberState.selectedOrgId === o.id ? 'selected' : ''}>${escapeHtml(o.name)}</option>`
           ).join('')}
         </optgroup>
-        <optgroup label="กลุ่มเกษตรกร">
+        <optgroup label="กลุ่มเกษตรกร" id="farmerOptGroup">
           ${orgs.filter(o => o.category === 'กลุ่มเกษตรกร').map(o =>
             `<option value="${o.id}" ${memberState.selectedOrgId === o.id ? 'selected' : ''}>${escapeHtml(o.name)}</option>`
           ).join('')}
@@ -57,6 +60,8 @@ async function renderMembers() {
 
   // Event listener
   const orgSelect = document.getElementById('memberOrgSelect');
+  const orgFilterInput = document.getElementById('orgFilterInput');
+
   orgSelect.addEventListener('change', (e) => {
     memberState.selectedOrgId = e.target.value;
     memberState.search = '';
@@ -70,6 +75,29 @@ async function renderMembers() {
         </div>
       `;
     }
+  });
+
+  // Filter organizations as user types
+  orgFilterInput.addEventListener('input', (e) => {
+    const searchText = e.target.value.toLowerCase();
+    const options = orgSelect.querySelectorAll('option');
+    
+    options.forEach(opt => {
+      if (opt.value === '') return; // Skip placeholder
+      const text = opt.textContent.toLowerCase();
+      if (text.includes(searchText)) {
+        opt.style.display = '';
+      } else {
+        opt.style.display = 'none';
+      }
+    });
+
+    // Handle optgroup visibility (optional but nice)
+    const groups = orgSelect.querySelectorAll('optgroup');
+    groups.forEach(group => {
+      const visibleOpts = Array.from(group.querySelectorAll('option')).filter(opt => opt.style.display !== 'none');
+      group.style.display = visibleOpts.length > 0 ? '' : 'none';
+    });
   });
 
   // Auto-load if org already selected

@@ -174,6 +174,10 @@ async function renderReports() {
           <span class="material-symbols-rounded">table_chart</span>
           สรุปจำนวนสมาชิกรายองค์กร
         </div>
+        <div class="search-inline" style="width: 250px;">
+          <span class="material-symbols-rounded">search</span>
+          <input type="text" class="form-input" id="reportOrgSearch" placeholder="ค้นหาชื่อองค์กร...">
+        </div>
       </div>
 
       <div class="table-wrapper animate-in">
@@ -221,6 +225,21 @@ async function renderReports() {
         </div>
       </div>
     `;
+
+    // Add search listener for reports table
+    const reportSearch = document.getElementById('reportOrgSearch');
+    reportSearch.addEventListener('input', (e) => {
+      const searchText = e.target.value.toLowerCase();
+      const rows = document.querySelectorAll('.table-wrapper tbody tr');
+      rows.forEach(row => {
+        const nameCell = row.cells[1]; // ชื่อองค์กร
+        if (nameCell) {
+          const text = nameCell.textContent.toLowerCase();
+          row.style.display = text.includes(searchText) ? '' : 'none';
+        }
+      });
+    });
+
 
   } catch (err) {
     console.error('Reports error:', err);
