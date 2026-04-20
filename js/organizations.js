@@ -32,7 +32,12 @@ async function renderOrganizations() {
         <option value="">ทุกประเภท</option>
         ${ORG_TYPES.map(t => `<option value="${t}" ${orgFilters.type === t ? 'selected' : ''}>${t}</option>`).join('')}
       </select>
-      ${isAdmin() ? `<button class="btn btn-primary" onclick="showOrgForm()" id="addOrgBtn">
+      ${isAdmin() ? `
+      <button class="btn btn-secondary" onclick="showImportForm()" id="importOrgBtn">
+        <span class="material-symbols-rounded">upload_file</span>
+        นำเข้าข้อมูล
+      </button>
+      <button class="btn btn-primary" onclick="showOrgForm()" id="addOrgBtn">
         <span class="material-symbols-rounded">add</span>
         เพิ่มองค์กร
       </button>` : ''}
@@ -515,5 +520,82 @@ async function deleteMemberFromOrgView(memberId, memberName, orgId) {
   } catch (err) {
     hideLoading();
     showToast('เกิดข้อผิดพลาด', 'error');
+  }
+}
+
+/**
+ * Show bulk import form in modal.
+ */
+function showImportForm() {
+  const html = `
+    <div class="mb-md">
+      <p class="text-secondary" style="font-size: 0.875rem; margin-bottom: 12px;">
+        กรอกข้อมูลที่ต้องการนำเข้า โดยแยกข้อมูลด้วยเครื่องหมายจุลภาค (comma) <br>
+        รูปแบบ: <strong>ชื่อสหกรณ์/กลุ่มเกษตรกร, ประเภท, หมวดหมู่, จังหวัด</strong> <br>
+        (1 บรรทัด = 1 รายการ)
+      </p>
+      <textarea id="importDataTextarea" class="form-textarea" style="min-height: 250px; font-family: monospace; font-size: 0.85rem;" 
+                placeholder="ตัวอย่าง:\nสหกรณ์การเกษตร A, สหกรณ์การเกษตร, สหกรณ์, เชียงใหม่\nกลุ่มเกษตรกร B, กลุ่มเกษตรกร, กลุ่มเกษตรกร, เชียงราย"></textarea>
+    </div>
+    <div class="form-actions" style="margin-top: 0; padding-top: 16px;">
+      <button type="button" class="btn btn-secondary" onclick="closeModal()">ยกเลิก</button>
+      <button type="button" class="btn btn-primary" onclick="handleImportSubmit()">
+        <span class="material-symbols-rounded">cloud_upload</span>
+        เริ่มนำเข้าข้อมูล
+      </button>
+    </div>
+  `;
+  openModal('นำเข้าข้อมูลหลายรายการ', html);
+}
+
+/**
+ * Parse textarea data and send to API.
+ */
+async function handleImportSubmit() {
+  const textarea = document.getElementById('importDataTextarea');
+  const text = textarea.value.trim();
+  
+  if (!text) {
+    showToast('กรุณากรอกข้อมูล', 'warning');
+    return;
+  }
+
+  const lines = text.split('\n');
+  const organizations = [];
+
+  for (let line of lines) {
+    const parts = line.split(',').map(p => p.trim());
+    if (parts.length >= 3) {
+      organizations.push({
+        name: parts[0],
+        type: parts[1],
+        category: parts[2],
+        province: parts[3] || '',
+        status: 'ดำเนินการ'
+      });
+    }
+  }
+
+  if (organizations.length === 0) {
+    showToast('รูปแบบข้อมูลไม่ถูกต้อง', 'error');
+    return;
+  }
+
+  try {
+    showLoading();
+    const res = await Api.createOrganizationsBatch(organizations);
+    hideLoading();
+
+    if (res.success) {
+      closeModal();
+      showToast(res.message || `นำเข้าสำเร็จ ${organizations.length} รายการ`, 'success');
+      await loadOrgTable();
+    } else {
+      showToast(res.error || 'เกิดข้อผิดพลาดในการนำเข้า', 'error');
+    }
+  } catch (err) {
+    hideLoading();
+    console.error('Import error:', err);
+    showToast('เกิดข้อผิดพลาดในการเชื่อมต่อ', 'error');
   }
 }

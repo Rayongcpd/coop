@@ -476,11 +476,24 @@ const Api = {
   getOrganizations: (params = {}) => apiGet('getOrganizations', params),
   getOrganization: (id) => apiGet('getOrganization', { id }),
   createOrganization: (data) => apiPost('createOrganization', data),
+  createOrganizationsBatch: (organizations) => apiPost('createOrganizationsBatch', { organizations }),
   updateOrganization: (data) => apiPost('updateOrganization', data),
   deleteOrganization: (id) => apiPost('deleteOrganization', { id }),
 
   // Members
   getMembers: (params = {}) => apiGet('getMembers', params),
+  getMember: (id) => apiGet('getMember', { id }),
+  createMember: (data) => apiPost('createMember', data),
+  updateMember: (data) => apiPost('updateMember', data),
+  deleteMember: (id) => apiPost('deleteMember', { id }),
+
+  // Dashboard
+  getDashboard: () => apiGet('getDashboard'),
+
+  // Admin
+  verifyAdmin: (password) => apiPost('verifyAdmin', { password }),
+};
+ (params = {}) => apiGet('getMembers', params),
   getMember: (id) => apiGet('getMember', { id }),
   createMember: (data) => apiPost('createMember', data),
   updateMember: (data) => apiPost('updateMember', data),
