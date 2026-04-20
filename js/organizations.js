@@ -55,7 +55,7 @@ async function renderOrganizations() {
         </div>
       </div>
       <div class="table-scroll">
-        <table>
+        <table class="org-table">
           <thead>
             <tr>
               <th>ชื่อ</th>
@@ -441,7 +441,7 @@ async function viewOrganization(id) {
 
       <div class="table-wrapper animate-in">
         <div class="table-scroll">
-          <table>
+          <table class="members-table">
             <thead>
               <tr>
                 <th>รหัส</th>

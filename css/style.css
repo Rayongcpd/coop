@@ -633,12 +633,29 @@ th, td {
 }
 
 /* Allow primary text columns (like names) to wrap */
-/* Organizations: 1st column, Members: 2nd column */
-td:nth-child(1), th:nth-child(1),
-td:nth-child(2), th:nth-child(2) {
+/* Specific targeting using classes added to tables */
+
+/* Organizations List: Name is 1st column */
+.org-table td:nth-child(1), 
+.org-table th:nth-child(1) {
+  white-space: normal;
+  min-width: 280px;
+  line-height: 1.5;
+}
+
+/* Members & Reports: Name is 2nd column */
+.members-table td:nth-child(2), th:nth-child(2),
+.reports-table td:nth-child(2), th:nth-child(2) {
   white-space: normal;
   min-width: 250px;
   line-height: 1.5;
+}
+
+/* Ensure Index/Code columns stay compact */
+.members-table td:nth-child(1),
+.reports-table td:nth-child(1) {
+  width: 60px;
+  white-space: nowrap;
 }
 
 /* Last column (Actions/Management) - Sticky to the right */

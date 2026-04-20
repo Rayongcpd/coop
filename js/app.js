@@ -182,7 +182,7 @@ async function renderReports() {
 
       <div class="table-wrapper animate-in">
         <div class="table-scroll">
-          <table>
+          <table class="reports-table">
             <thead>
               <tr>
                 <th>ลำดับ</th>

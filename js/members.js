@@ -168,7 +168,7 @@ async function loadMemberView() {
           </div>
         </div>
         <div class="table-scroll">
-          <table>
+          <table class="members-table">
             <thead>
               <tr>
                 <th>รหัสสมาชิก</th>
