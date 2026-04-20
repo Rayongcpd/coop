@@ -526,13 +526,27 @@ async function deleteMemberFromOrgView(memberId, memberName, orgId) {
 function showImportForm() {
   const html = `
     <div class="mb-md">
+      <div class="form-row mb-md">
+        <div class="form-group">
+          <label class="form-label">หมวดหมู่ <span class="required">*</span></label>
+          <select class="form-select" id="importOrgCategory" required>
+            ${ORG_CATEGORIES.map(c => `<option value="${c}">${c}</option>`).join('')}
+          </select>
+        </div>
+        <div class="form-group" id="importOrgTypeGroup">
+          <label class="form-label">ประเภท <span class="required">*</span></label>
+          <select class="form-select" id="importOrgType" required>
+            ${ORG_TYPES.map(t => `<option value="${t}">${t}</option>`).join('')}
+          </select>
+        </div>
+      </div>
+
       <p class="text-secondary" style="font-size: 0.875rem; margin-bottom: 12px;">
-        กรอกข้อมูลที่ต้องการนำเข้า โดยแยกข้อมูลด้วยเครื่องหมายจุลภาค (comma) <br>
-        รูปแบบ: <strong>ชื่อสหกรณ์/กลุ่มเกษตรกร, ประเภท, หมวดหมู่, จังหวัด</strong> <br>
-        (1 บรรทัด = 1 รายการ)
+        กรอกข้อมูลที่ต้องการนำเข้า โดยแยกข้อมูลด้วยช่องว่าง (Tab หรือ Space 2 ช่องขึ้นไป) <br>
+        รูปแบบ: <strong>ลำดับที่, ชื่อสหกรณ์, วันจดทะเบียน, สถานะ, ที่อยู่</strong> <br>
       </p>
       <textarea id="importDataTextarea" class="form-textarea" style="min-height: 250px; font-family: monospace; font-size: 0.85rem;" 
-                placeholder="ตัวอย่าง:\nสหกรณ์การเกษตร A, สหกรณ์การเกษตร, สหกรณ์, ระยอง\nกลุ่มเกษตรกร B, กลุ่มเกษตรกร, กลุ่มเกษตรกร, ระยอง"></textarea>
+                placeholder="ตัวอย่าง:\n1   สหกรณ์การเกษตร A   9 มีนาคม 2527   ดำเนินการ   362 หมู่ที่ 9 ต.หนองบัว อ.บ้านค่าย จ.ระยอง 21120"></textarea>
     </div>
     <div class="form-actions" style="margin-top: 0; padding-top: 16px;">
       <button type="button" class="btn btn-secondary" onclick="closeModal()">ยกเลิก</button>
@@ -543,6 +557,21 @@ function showImportForm() {
     </div>
   `;
   openModal('นำเข้าข้อมูลหลายรายการ', html);
+
+  // Category change handler for import modal
+  const catSelect = document.getElementById('importOrgCategory');
+  const typeSelect = document.getElementById('importOrgType');
+  const typeGroup = document.getElementById('importOrgTypeGroup');
+
+  catSelect.addEventListener('change', () => {
+    if (catSelect.value === 'กลุ่มเกษตรกร') {
+      typeSelect.innerHTML = '<option value="กลุ่มเกษตรกร">กลุ่มเกษตรกร</option>';
+      typeGroup.style.display = 'none';
+    } else {
+      typeSelect.innerHTML = ORG_TYPES.map(t => `<option value="${t}">${t}</option>`).join('');
+      typeGroup.style.display = 'block';
+    }
+  });
 }
 
 /**
@@ -550,6 +579,8 @@ function showImportForm() {
  */
 async function handleImportSubmit() {
   const textarea = document.getElementById('importDataTextarea');
+  const category = document.getElementById('importOrgCategory').value;
+  const type = document.getElementById('importOrgType').value;
   const text = textarea.value.trim();
   
   if (!text) {
@@ -559,22 +590,49 @@ async function handleImportSubmit() {
 
   const lines = text.split('\n');
   const organizations = [];
+  let skipped = 0;
 
-  for (let line of lines) {
-    const parts = line.split(',').map(p => p.trim());
-    if (parts.length >= 3) {
+  lines.forEach(line => {
+    // Split by tabs or 2+ spaces
+    const parts = line.split(/\t|\s{2,}/).map(p => p.trim()).filter(p => p);
+    
+    // Minimum 4 parts: (Index), Name, Date, Status, Address (Index is often column 0)
+    // Based on user: ลำดับที่ ชื่อสหกรณ์ วันจดทะเบียน สถานะของสหกรณ์ ที่อยู่ (5 columns)
+    if (parts.length >= 4) {
+      // If first part is a number, it's likely the index. If not, maybe index is missing.
+      let name, dateStr, status, address;
+      
+      if (!isNaN(parts[0]) && parts.length >= 5) {
+        // [0: Index, 1: Name, 2: Date, 3: Status, 4: Address]
+        name = parts[1];
+        dateStr = parts[2];
+        status = parts[3];
+        address = parts[4];
+      } else {
+        // [0: Name, 1: Date, 2: Status, 3: Address]
+        name = parts[0];
+        dateStr = parts[1];
+        status = parts[2];
+        address = parts[3];
+      }
+
       organizations.push({
-        name: parts[0],
-        type: parts[1],
-        category: parts[2],
-        province: parts[3] || 'ระยอง',
-        status: 'ดำเนินการ'
+        name,
+        category,
+        type,
+        registrationDate: parseThaiDate(dateStr),
+        status: status || 'ดำเนินการ',
+        address: address || '',
+        province: 'ระยอง', // Default
+        district: extractDistrict(address || '')
       });
+    } else {
+      if (line.trim()) skipped++;
     }
-  }
+  });
 
   if (organizations.length === 0) {
-    showToast('รูปแบบข้อมูลไม่ถูกต้อง', 'error');
+    showToast('รูปแบบข้อมูลไม่ถูกต้อง หรือไม่มีข้อมูลที่นำเข้าได้', 'error');
     return;
   }
 
@@ -585,7 +643,9 @@ async function handleImportSubmit() {
 
     if (res.success) {
       closeModal();
-      showToast(res.message || `นำเข้าสำเร็จ ${organizations.length} รายการ`, 'success');
+      let msg = res.message || `นำเข้าสำเร็จ ${organizations.length} รายการ`;
+      if (skipped > 0) msg += ` (ข้าม ${skipped} บรรทัด)`;
+      showToast(msg, 'success');
       await loadOrgTable();
     } else {
       showToast(res.error || 'เกิดข้อผิดพลาดในการนำเข้า', 'error');
@@ -595,4 +655,47 @@ async function handleImportSubmit() {
     console.error('Import error:', err);
     showToast('เกิดข้อผิดพลาดในการเชื่อมต่อ', 'error');
   }
+}
+
+/**
+ * Helper: Parse Thai Date string (e.g. "9 มีนาคม 2527") to ISO "YYYY-MM-DD"
+ */
+function parseThaiDate(dateStr) {
+  if (!dateStr) return '';
+  
+  const monthMap = {
+    'มกราคม': '01', 'ม.ค.': '01',
+    'กุมภาพันธ์': '02', 'ก.พ.': '02',
+    'มีนาคม': '03', 'มี.ค.': '03',
+    'เมษายน': '04', 'เม.ย.': '04',
+    'พฤษภาคม': '05', 'พ.ค.': '05',
+    'มิถุนายน': '06', 'มิ.ย.': '06',
+    'กรกฎาคม': '07', 'ก.ค.': '07',
+    'สิงหาคม': '08', 'ส.ค.': '08',
+    'กันยายน': '09', 'ก.ย.': '09',
+    'ตุลาคม': '10', 'ต.ค.': '10',
+    'พฤศจิกายน': '11', 'พ.ย.': '11',
+    'ธันวาคม': '12', 'ธ.ค.': '12'
+  };
+
+  const parts = dateStr.split(/\s+/);
+  if (parts.length < 3) return '';
+
+  const day = parts[0].padStart(2, '0');
+  const month = monthMap[parts[1]] || '01';
+  const yearBE = parseInt(parts[2]);
+  if (isNaN(yearBE)) return '';
+  const yearAD = yearBE - 543;
+
+  return `${yearAD}-${month}-${day}`;
+}
+
+/**
+ * Helper: Extract district (อำเภอ) from address string
+ */
+function extractDistrict(address) {
+  if (!address) return '';
+  // Match "อ.บ้านค่าย", "อำเภอเมือง", etc.
+  const match = address.match(/(?:อำเภอ|อ\.)\s*([^\s,]+)/);
+  return match ? match[1] : '';
 }
