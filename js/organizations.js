@@ -87,8 +87,24 @@ async function renderOrganizations() {
 
   categorySelect.addEventListener('change', (e) => {
     orgFilters.category = e.target.value;
+    orgFilters.type = ''; // Reset type when category changes
+    updateTypeFilterOptions();
     loadOrgTable();
   });
+
+  function updateTypeFilterOptions() {
+    const cat = orgFilters.category;
+    let options = '<option value="">ทุกประเภท</option>';
+    if (cat === 'สหกรณ์') {
+      options += ORG_TYPES.map(t => `<option value="${t}" ${orgFilters.type === t ? 'selected' : ''}>${t}</option>`).join('');
+    } else if (cat === 'กลุ่มเกษตรกร') {
+      options += FARMER_GROUP_TYPES.map(t => `<option value="${t}" ${orgFilters.type === t ? 'selected' : ''}>${t}</option>`).join('');
+    } else {
+      // Show all? Or just hide? Let's show both but usually we filter by category first
+      options += [...ORG_TYPES, ...FARMER_GROUP_TYPES].map(t => `<option value="${t}" ${orgFilters.type === t ? 'selected' : ''}>${t}</option>`).join('');
+    }
+    typeSelect.innerHTML = options;
+  }
 
   typeSelect.addEventListener('change', (e) => {
     orgFilters.type = e.target.value;
@@ -207,7 +223,7 @@ async function showOrgForm(orgId) {
           <select class="form-select" name="type" id="orgFormType" required>
             <option value="">เลือกประเภท</option>
             ${org.category === 'กลุ่มเกษตรกร'
-              ? '<option value="กลุ่มเกษตรกร" selected>กลุ่มเกษตรกร</option>'
+              ? FARMER_GROUP_TYPES.map(t => `<option value="${t}" ${org.type === t ? 'selected' : ''}>${t}</option>`).join('')
               : ORG_TYPES.map(t => `<option value="${t}" ${org.type === t ? 'selected' : ''}>${t}</option>`).join('')
             }
           </select>
@@ -272,10 +288,13 @@ async function showOrgForm(orgId) {
   catSelect.addEventListener('change', () => {
     const cat = catSelect.value;
     if (cat === 'กลุ่มเกษตรกร') {
-      typeSelect.innerHTML = '<option value="กลุ่มเกษตรกร" selected>กลุ่มเกษตรกร</option>';
+      typeSelect.innerHTML = `
+        <option value="">เลือกประเภทกระเกษตรกร</option>
+        ${FARMER_GROUP_TYPES.map(t => `<option value="${t}">${t}</option>`).join('')}
+      `;
     } else {
       typeSelect.innerHTML = `
-        <option value="">เลือกประเภท</option>
+        <option value="">เลือกประเภทสหกรณ์</option>
         ${ORG_TYPES.map(t => `<option value="${t}">${t}</option>`).join('')}
       `;
     }
@@ -564,12 +583,19 @@ function showImportForm() {
   const typeGroup = document.getElementById('importOrgTypeGroup');
 
   catSelect.addEventListener('change', () => {
-    if (catSelect.value === 'กลุ่มเกษตรกร') {
-      typeSelect.innerHTML = '<option value="กลุ่มเกษตรกร">กลุ่มเกษตรกร</option>';
-      typeGroup.style.display = 'none';
-    } else {
-      typeSelect.innerHTML = ORG_TYPES.map(t => `<option value="${t}">${t}</option>`).join('');
+    const cat = catSelect.value;
+    if (cat === 'กลุ่มเกษตรกร') {
       typeGroup.style.display = 'block';
+      typeSelect.innerHTML = `
+        <option value="">เลือกประเภทกลุ่มเกษตรกร</option>
+        ${FARMER_GROUP_TYPES.map(t => `<option value="${t}">${t}</option>`).join('')}
+      `;
+    } else {
+      typeGroup.style.display = 'block';
+      typeSelect.innerHTML = `
+        <option value="">เลือกประเภทสหกรณ์</option>
+        ${ORG_TYPES.map(t => `<option value="${t}">${t}</option>`).join('')}
+      `;
     }
   });
 }
