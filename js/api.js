@@ -62,7 +62,7 @@ const PROVINCES = ['ระยอง'];
 // Admin Authentication
 // ============================================================
 
-const DEMO_ADMIN_PASSWORD = 'admin1234';
+// const DEMO_ADMIN_PASSWORD = 'admin1234'; // REMOVED FOR SECURITY
 let isAdminLoggedIn = false;
 
 // Restore session on load
@@ -518,11 +518,7 @@ function handleMockPost(action, data) {
           break;
         }
         case 'verifyAdmin': {
-          if (data.password === DEMO_ADMIN_PASSWORD) {
-            resolve({ success: true });
-          } else {
-            resolve({ success: false, error: 'รหัสผ่านไม่ถูกต้อง' });
-          }
+          resolve({ success: false, error: 'ระบบ Login Admin ถูกปิดใช้งานในโหมด Demo เพื่อความปลอดภัย กรุณาตั้งค่า APPS_SCRIPT_URL เพื่อใช้งานระบบจริง' });
           break;
         }
         case 'saveTypeSummary': {
