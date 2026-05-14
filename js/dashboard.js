@@ -25,10 +25,12 @@ async function renderDashboard() {
     content.innerHTML = `
       <!-- Summary Stats -->
       <div class="stats-grid" id="statsGrid">
-        ${createStatCard('apartment', 'สหกรณ์ทั้งหมด', data.totalOrgs, 'แห่ง', 'blue', 0)}
+        ${createStatCard('apartment', 'สหกรณ์', data.totalOrgs, 'แห่ง', 'blue', 0)}
         ${createStatCard('eco', 'กลุ่มเกษตรกร', data.totalFarmerGroups, 'กลุ่ม', 'green', 1)}
-        ${createStatCard('groups', 'สมาชิกทั้งหมด', data.totalMembers, `ปกติ ${data.activeMembers} คน`, 'purple', 2)}
-        ${createStatCard('handshake', 'ร่วมทำธุรกิจ', data.businessMembers, `${data.totalMembers > 0 ? Math.round(data.businessMembers / data.totalMembers * 100) : 0}% ของสมาชิก`, 'amber', 3)}
+        ${createStatCard('groups', 'สมาชิกสหกรณ์', data.coopMemberCount, 'คน', 'purple', 2)}
+        ${createStatCard('groups', 'สมาชิกกลุ่มเกษตรกร', data.farmerMemberCount, 'คน', 'rose', 3)}
+        ${createStatCard('handshake', 'สหกรณ์ร่วมธุรกิจ', data.coopBusinessCount, 'คน', 'indigo', 4)}
+        ${createStatCard('handshake', 'กลุ่มเกษตรกรร่วมธุรกิจ', data.farmerBusinessCount, 'คน', 'amber', 5)}
       </div>
 
       <!-- Charts Row -->
@@ -79,18 +81,6 @@ async function renderDashboard() {
         </div>
       </div>
 
-      <!-- Quick Overview -->
-      <div class="section-header mt-lg">
-        <div class="section-title">
-          <span class="material-symbols-rounded">visibility</span>
-          สรุปภาพรวม
-        </div>
-      </div>
-      <div class="stats-grid">
-        ${createStatCard('check_circle', 'องค์กรดำเนินการ', data.activeOrgs, 'แห่ง', 'cyan', 0)}
-        ${createStatCard('people', 'สมาชิกสหกรณ์', data.coopMemberCount, 'คน', 'indigo', 1)}
-        ${createStatCard('person_raised_hand', 'สมาชิกกลุ่มเกษตรกร', data.farmerMemberCount, 'คน', 'rose', 2)}
-      </div>
     `;
 
     // Create charts

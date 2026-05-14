@@ -289,8 +289,10 @@ async function renderReports() {
       <div class="stats-grid">
         ${createStatCard('apartment', 'สหกรณ์', dash.totalOrgs || 0, 'แห่ง', 'blue', 0)}
         ${createStatCard('eco', 'กลุ่มเกษตรกร', dash.totalFarmerGroups || 0, 'กลุ่ม', 'green', 1)}
-        ${createStatCard('groups', 'สมาชิกทั้งหมด', dash.totalMembers || 0, 'คน', 'purple', 2)}
-        ${createStatCard('handshake', 'ร่วมทำธุรกิจ', dash.businessMembers || 0, 'คน', 'amber', 3)}
+        ${createStatCard('groups', 'สมาชิกสหกรณ์', dash.coopMemberCount || 0, 'คน', 'purple', 2)}
+        ${createStatCard('groups', 'สมาชิกกลุ่มเกษตรกร', dash.farmerMemberCount || 0, 'คน', 'rose', 3)}
+        ${createStatCard('handshake', 'สหกรณ์ร่วมธุรกิจ', dash.coopBusinessCount || 0, 'คน', 'indigo', 4)}
+        ${createStatCard('handshake', 'กลุ่มเกษตรกรร่วมธุรกิจ', dash.farmerBusinessCount || 0, 'คน', 'amber', 5)}
       </div>
 
       <div class="report-grid">

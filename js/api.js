@@ -391,6 +391,7 @@ function handleMockGet(action, params) {
 
           let totalMembers = 0, activeMembers = 0, businessMembers = 0;
           let coopMemberCount = 0, farmerMemberCount = 0;
+          let coopBusinessCount = 0, farmerBusinessCount = 0;
           const businessByType = {};
           BUSINESS_TYPES.forEach(t => businessByType[t] = 0);
 
@@ -399,8 +400,13 @@ function handleMockGet(action, params) {
               const mc = parseInt(s.memberCount) || 0;
               const bt = parseInt(s.businessTotal) || 0;
               totalMembers += mc; businessMembers += bt;
-              if (s.category === 'สหกรณ์') coopMemberCount += mc;
-              else farmerMemberCount += mc;
+              if (s.category === 'สหกรณ์') {
+                coopMemberCount += mc;
+                coopBusinessCount += bt;
+              } else {
+                farmerMemberCount += mc;
+                farmerBusinessCount += bt;
+              }
               businessByType['รับฝากเงิน'] += parseInt(s.bizDeposit) || 0;
               businessByType['ให้เงินกู้'] += parseInt(s.bizLoan) || 0;
               businessByType['จัดหาสินค้ามาจำหน่าย'] += parseInt(s.bizSupply) || 0;
@@ -413,6 +419,11 @@ function handleMockGet(action, params) {
             totalMembers = mockMembers.length;
             activeMembers = mockMembers.filter(m => m.status === 'ปกติ').length;
             businessMembers = mockMembers.filter(m => m.participateInBusiness).length;
+            const coopOrgIds = new Set(coopOrgs.map(o => o.id));
+            coopMemberCount = mockMembers.filter(m => coopOrgIds.has(m.orgId)).length;
+            farmerMemberCount = mockMembers.filter(m => !coopOrgIds.has(m.orgId)).length;
+            coopBusinessCount = mockMembers.filter(m => coopOrgIds.has(m.orgId) && m.participateInBusiness).length;
+            farmerBusinessCount = mockMembers.filter(m => !coopOrgIds.has(m.orgId) && m.participateInBusiness).length;
           }
 
           resolve({
@@ -422,6 +433,7 @@ function handleMockGet(action, params) {
               totalFarmerGroups: farmerOrgsD.length,
               totalMembers, activeMembers, businessMembers,
               byType, coopMemberCount, farmerMemberCount,
+              coopBusinessCount, farmerBusinessCount,
               businessByType,
               activeOrgs: mockOrgs.filter(o => o.status === 'ดำเนินการ').length,
               summaries: hasSummary ? mockTypeSummary : [],
