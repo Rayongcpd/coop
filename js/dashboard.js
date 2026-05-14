@@ -46,6 +46,17 @@ async function renderDashboard() {
           </div>
         </div>
 
+        <!-- Farmer Group Types Chart -->
+        <div class="chart-card animate-in animate-in-delay-2">
+          <div class="chart-card-title">
+            <span class="material-symbols-rounded">donut_small</span>
+            จำนวนกลุ่มเกษตรกรแยกตามประเภท
+          </div>
+          <div class="chart-container">
+            <canvas id="farmerGroupTypeChart"></canvas>
+          </div>
+        </div>
+
         <!-- Members by Category Chart -->
         <div class="chart-card animate-in animate-in-delay-3">
           <div class="chart-card-title">
@@ -85,6 +96,7 @@ async function renderDashboard() {
 
     // Create charts
     createCoopTypeChart(data.byType);
+    createFarmerGroupTypeChart(data.byFarmerGroupType);
     createMemberCategoryChart(data.coopMemberCount, data.farmerMemberCount);
     createBusinessParticipationChart(data.businessMembers, data.totalMembers - data.businessMembers);
     createBusinessTypeChart(data.businessByType);
@@ -175,6 +187,61 @@ function createCoopTypeChart(byType) {
         data: values,
         backgroundColor: CHART_COLORS_ALPHA,
         borderColor: CHART_COLORS,
+        borderWidth: 2,
+        hoverOffset: 8,
+      }],
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      cutout: '55%',
+      plugins: {
+        legend: {
+          position: 'bottom',
+          labels: {
+            ...getChartDefaults(),
+            padding: 16,
+            usePointStyle: true,
+            pointStyleWidth: 10,
+          },
+        },
+        tooltip: {
+          backgroundColor: '#1E293B',
+          titleColor: '#F1F5F9',
+          bodyColor: '#94A3B8',
+          borderColor: 'rgba(148,163,184,0.2)',
+          borderWidth: 1,
+          padding: 12,
+          cornerRadius: 8,
+        },
+      },
+    },
+  });
+}
+
+/**
+ * Farmer group types doughnut chart.
+ */
+function createFarmerGroupTypeChart(byType) {
+  destroyChart('farmerGroupType');
+  const canvas = document.getElementById('farmerGroupTypeChart');
+  if (!canvas) return;
+
+  const labels = Object.keys(byType).map(t => t.replace('กลุ่มเกษตรกร', '').trim());
+  const values = Object.values(byType);
+
+  // Use a slightly different color scheme for variety, or reuse but reversed
+  const colors = [...CHART_COLORS].reverse();
+  const colorsAlpha = [...CHART_COLORS_ALPHA].reverse();
+
+  chartInstances.farmerGroupType = new Chart(canvas, {
+    type: 'doughnut',
+    data: {
+      labels: labels,
+      datasets: [{
+        data: values,
+        backgroundColor: colorsAlpha,
+        borderColor: colors,
         borderWidth: 2,
         hoverOffset: 8,
       }],
