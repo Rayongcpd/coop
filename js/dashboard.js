@@ -138,13 +138,13 @@ function createStatCard(icon, label, value, sub, color, delay) {
 // ============================================================
 
 const CHART_COLORS = [
-  '#3B82F6', '#10B981', '#F59E0B', '#8B5CF6',
-  '#EF4444', '#06B6D4', '#F43F5E', '#6366F1',
+  '#111111', '#d97757', '#5b89e9', '#10b981',
+  '#8b5cf6', '#f59e0b', '#ef4444', '#64748b',
 ];
 
 const CHART_COLORS_ALPHA = [
-  'rgba(59,130,246,0.8)', 'rgba(16,185,129,0.8)', 'rgba(245,158,11,0.8)', 'rgba(139,92,246,0.8)',
-  'rgba(239,68,68,0.8)', 'rgba(6,182,212,0.8)', 'rgba(244,63,94,0.8)', 'rgba(99,102,241,0.8)',
+  'rgba(17,17,17,0.8)', 'rgba(217,119,87,0.8)', 'rgba(91,137,233,0.8)', 'rgba(16,185,129,0.8)',
+  'rgba(139,92,246,0.8)', 'rgba(245,158,11,0.8)', 'rgba(239,68,68,0.8)', 'rgba(100,116,139,0.8)',
 ];
 
 /**
@@ -162,8 +162,8 @@ function destroyChart(name) {
  */
 function getChartDefaults() {
   return {
-    color: '#94A3B8',
-    borderColor: 'rgba(148,163,184,0.1)',
+    color: '#676767',
+    borderColor: '#eceae5',
     font: { family: "'Inter', 'Noto Sans Thai', sans-serif" },
   };
 }
@@ -206,10 +206,10 @@ function createCoopTypeChart(byType) {
           },
         },
         tooltip: {
-          backgroundColor: '#1E293B',
-          titleColor: '#F1F5F9',
-          bodyColor: '#94A3B8',
-          borderColor: 'rgba(148,163,184,0.2)',
+          backgroundColor: '#ffffff',
+          titleColor: '#111111',
+          bodyColor: '#676767',
+          borderColor: '#e1dfda',
           borderWidth: 1,
           padding: 12,
           cornerRadius: 8,
@@ -261,10 +261,10 @@ function createFarmerGroupTypeChart(byType) {
           },
         },
         tooltip: {
-          backgroundColor: '#1E293B',
-          titleColor: '#F1F5F9',
-          bodyColor: '#94A3B8',
-          borderColor: 'rgba(148,163,184,0.2)',
+          backgroundColor: '#ffffff',
+          titleColor: '#111111',
+          bodyColor: '#676767',
+          borderColor: '#e1dfda',
           borderWidth: 1,
           padding: 12,
           cornerRadius: 8,
@@ -303,10 +303,10 @@ function createMemberCategoryChart(coopCount, farmerCount) {
       plugins: {
         legend: { display: false },
         tooltip: {
-          backgroundColor: '#1E293B',
-          titleColor: '#F1F5F9',
-          bodyColor: '#94A3B8',
-          borderColor: 'rgba(148,163,184,0.2)',
+          backgroundColor: '#ffffff',
+          titleColor: '#111111',
+          bodyColor: '#676767',
+          borderColor: '#e1dfda',
           borderWidth: 1,
           padding: 12,
           cornerRadius: 8,
@@ -318,11 +318,11 @@ function createMemberCategoryChart(coopCount, farmerCount) {
       scales: {
         y: {
           beginAtZero: true,
-          ticks: { color: '#64748B' },
-          grid: { color: 'rgba(148,163,184,0.08)' },
+          ticks: { color: '#8e8e8e' },
+          grid: { color: '#eceae5' },
         },
         x: {
-          ticks: { color: '#94A3B8', font: { size: 13 } },
+          ticks: { color: '#676767', font: { size: 13 } },
           grid: { display: false },
         },
       },
@@ -365,10 +365,10 @@ function createBusinessParticipationChart(participating, notParticipating) {
           },
         },
         tooltip: {
-          backgroundColor: '#1E293B',
-          titleColor: '#F1F5F9',
-          bodyColor: '#94A3B8',
-          borderColor: 'rgba(148,163,184,0.2)',
+          backgroundColor: '#ffffff',
+          titleColor: '#111111',
+          bodyColor: '#676767',
+          borderColor: '#e1dfda',
           borderWidth: 1,
           padding: 12,
           cornerRadius: 8,
@@ -413,10 +413,10 @@ function createBusinessTypeChart(businessByType) {
       plugins: {
         legend: { display: false },
         tooltip: {
-          backgroundColor: '#1E293B',
-          titleColor: '#F1F5F9',
-          bodyColor: '#94A3B8',
-          borderColor: 'rgba(148,163,184,0.2)',
+          backgroundColor: '#ffffff',
+          titleColor: '#111111',
+          bodyColor: '#676767',
+          borderColor: '#e1dfda',
           borderWidth: 1,
           padding: 12,
           cornerRadius: 8,
@@ -428,11 +428,11 @@ function createBusinessTypeChart(businessByType) {
       scales: {
         x: {
           beginAtZero: true,
-          ticks: { color: '#64748B' },
-          grid: { color: 'rgba(148,163,184,0.08)' },
+          ticks: { color: '#8e8e8e' },
+          grid: { color: '#eceae5' },
         },
         y: {
-          ticks: { color: '#94A3B8', font: { size: 11 } },
+          ticks: { color: '#676767', font: { size: 11 } },
           grid: { display: false },
         },
       },
