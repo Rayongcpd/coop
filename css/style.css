@@ -181,20 +181,30 @@ body::before {
   color: #fff;
 }
 
+.logo-text {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
 .logo-text h1 {
   font-size: 0.9rem;
   font-weight: 700;
-  line-height: 1.25;
+  line-height: 1.2;
   letter-spacing: -0.01em;
   color: var(--text-primary);
+  margin: 0;
 }
 
 .logo-text span {
-  font-size: 0.7rem;
+  display: block;
+  font-size: 0.65rem;
   color: var(--text-secondary);
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.05em;
   font-weight: 500;
+  line-height: 1.1;
+  margin-top: 1px;
 }
 
 .sidebar-close {
