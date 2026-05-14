@@ -1667,3 +1667,94 @@ tbody tr:last-child td {
 .flex-center { display: flex; align-items: center; justify-content: center; }
 .flex-between { display: flex; align-items: center; justify-content: space-between; }
 .hidden { display: none !important; }
+
+/* ============================================================
+   TYPE SUMMARY TABLE
+   ============================================================ */
+.ts-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.ts-table th {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 10px 8px;
+  text-align: center;
+  white-space: nowrap;
+  position: static;
+  background: rgba(30, 41, 59, 0.5);
+  box-shadow: none;
+}
+
+.ts-table th:first-child {
+  text-align: left;
+  padding-left: 20px;
+  min-width: 120px;
+}
+
+.ts-table td {
+  padding: 6px 4px;
+  border-bottom: 1px solid var(--border-light);
+  text-align: center;
+  position: static;
+  background: transparent;
+  box-shadow: none;
+}
+
+.ts-table td:first-child {
+  text-align: left;
+  padding-left: 20px;
+  font-size: 0.85rem;
+}
+
+.ts-table tbody tr:hover td {
+  background: rgba(59, 130, 246, 0.05);
+}
+
+.ts-input {
+  width: 90px;
+  padding: 6px 8px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  background: var(--bg-input);
+  color: var(--text-primary);
+  font-size: 0.82rem;
+  text-align: right;
+  outline: none;
+  transition: all 0.2s var(--ease);
+  -moz-appearance: textfield;
+}
+
+.ts-input::-webkit-outer-spin-button,
+.ts-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.ts-input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px var(--primary-glow);
+  background: rgba(30, 41, 59, 0.9);
+}
+
+.ts-input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Override sticky last column for ts-table */
+.ts-table th:last-child,
+.ts-table td:last-child {
+  position: static;
+  box-shadow: none;
+  background: transparent;
+}
+
+.ts-table tbody tr:hover td:last-child {
+  background: rgba(59, 130, 246, 0.05) !important;
+}

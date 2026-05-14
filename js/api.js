@@ -265,6 +265,22 @@ const MOCK_MEMBERS = [
 let mockOrgs = JSON.parse(JSON.stringify(MOCK_ORGANIZATIONS));
 let mockMembers = JSON.parse(JSON.stringify(MOCK_MEMBERS));
 
+// Type Summary mock data (ข้อมูลจริงจาก PDF)
+let mockTypeSummary = [
+  { id: 'ts01', category: 'สหกรณ์', type: 'สหกรณ์การเกษตร', orgCount: 10, memberCount: 32642, businessTotal: 44447, bizDeposit: 15734, bizLoan: 16768, bizSupply: 11615, bizCollect: 21792, bizProcess: 1375, bizService: 648, dataDate: '2569-01-01' },
+  { id: 'ts02', category: 'สหกรณ์', type: 'สหกรณ์ประมง', orgCount: 2, memberCount: 1086, businessTotal: 1086, bizDeposit: 1074, bizLoan: 933, bizSupply: 149, bizCollect: 120, bizProcess: 0, bizService: 7, dataDate: '2569-01-01' },
+  { id: 'ts03', category: 'สหกรณ์', type: 'สหกรณ์นิคม', orgCount: 4, memberCount: 10778, businessTotal: 10719, bizDeposit: 7360, bizLoan: 2546, bizSupply: 1374, bizCollect: 2438, bizProcess: 0, bizService: 190, dataDate: '2569-01-01' },
+  { id: 'ts04', category: 'สหกรณ์', type: 'สหกรณ์ร้านค้า', orgCount: 0, memberCount: 0, businessTotal: 0, bizDeposit: 0, bizLoan: 0, bizSupply: 0, bizCollect: 0, bizProcess: 0, bizService: 0, dataDate: '2569-01-01' },
+  { id: 'ts05', category: 'สหกรณ์', type: 'สหกรณ์บริการ', orgCount: 7, memberCount: 5965, businessTotal: 0, bizDeposit: 0, bizLoan: 0, bizSupply: 0, bizCollect: 0, bizProcess: 0, bizService: 0, dataDate: '2569-01-01' },
+  { id: 'ts06', category: 'สหกรณ์', type: 'สหกรณ์ออมทรัพย์', orgCount: 25, memberCount: 24184, businessTotal: 24184, bizDeposit: 23504, bizLoan: 19724, bizSupply: 20758, bizCollect: 14343, bizProcess: 0, bizService: 0, dataDate: '2569-01-01' },
+  { id: 'ts07', category: 'สหกรณ์', type: 'สหกรณ์เครดิตยูเนียน', orgCount: 11, memberCount: 6216, businessTotal: 6216, bizDeposit: 4836, bizLoan: 852, bizSupply: 3802, bizCollect: 1765, bizProcess: 0, bizService: 48, dataDate: '2569-01-01' },
+  { id: 'ts08', category: 'กลุ่มเกษตรกร', type: 'กลุ่มเกษตรกรทำนา', orgCount: 4, memberCount: 338, businessTotal: 138, bizDeposit: 0, bizLoan: 0, bizSupply: 67, bizCollect: 29, bizProcess: 0, bizService: 0, dataDate: '2569-01-01' },
+  { id: 'ts09', category: 'กลุ่มเกษตรกร', type: 'กลุ่มเกษตรกรทำไร่', orgCount: 12, memberCount: 1321, businessTotal: 1521, bizDeposit: 0, bizLoan: 495, bizSupply: 462, bizCollect: 170, bizProcess: 0, bizService: 24, dataDate: '2569-01-01' },
+  { id: 'ts10', category: 'กลุ่มเกษตรกร', type: 'กลุ่มเกษตรกรทำสวน', orgCount: 18, memberCount: 2506, businessTotal: 2506, bizDeposit: 0, bizLoan: 242, bizSupply: 857, bizCollect: 275, bizProcess: 0, bizService: 18, dataDate: '2569-01-01' },
+  { id: 'ts11', category: 'กลุ่มเกษตรกร', type: 'กลุ่มเกษตรกรทำประมง', orgCount: 1, memberCount: 52, businessTotal: 52, bizDeposit: 0, bizLoan: 14, bizSupply: 0, bizCollect: 14, bizProcess: 0, bizService: 0, dataDate: '2569-01-01' },
+  { id: 'ts12', category: 'กลุ่มเกษตรกร', type: 'กลุ่มเกษตรกรเลี้ยงสัตว์', orgCount: 1, memberCount: 49, businessTotal: 49, bizDeposit: 0, bizLoan: 0, bizSupply: 0, bizCollect: 0, bizProcess: 0, bizService: 0, dataDate: '2569-01-01' },
+];
+
 // ============================================================
 // API Request Helper
 // ============================================================
@@ -366,61 +382,55 @@ function handleMockGet(action, params) {
           break;
         }
         case 'getDashboard': {
+          const hasSummary = mockTypeSummary.length > 0;
           const coopOrgs = mockOrgs.filter(o => o.category === 'สหกรณ์');
           const farmerOrgsD = mockOrgs.filter(o => o.category === 'กลุ่มเกษตรกร');
-          const coopOrgIdsD = new Set(coopOrgs.map(o => o.id));
-
-          let totalMembers = 0, activeMembers = 0, businessMembers = 0;
-          let coopMemberCount = 0, farmerMemberCount = 0;
-
-          mockOrgs.forEach(org => {
-            const actual = mockMembers.filter(m => m.orgId === org.id);
-            const hasSummary = parseInt(org.totalMembers) > 0;
-            let oT, oA, oB;
-            if (actual.length > 0 && !hasSummary) {
-              oT = actual.length;
-              oA = actual.filter(m => m.status === 'ปกติ').length;
-              oB = actual.filter(m => m.participateInBusiness).length;
-            } else if (hasSummary) {
-              oT = parseInt(org.totalMembers) || 0;
-              oA = parseInt(org.activeMembers) || 0;
-              oB = parseInt(org.businessParticipants) || 0;
-            } else { oT = 0; oA = 0; oB = 0; }
-            totalMembers += oT; activeMembers += oA; businessMembers += oB;
-            if (coopOrgIdsD.has(org.id)) coopMemberCount += oT;
-            else farmerMemberCount += oT;
-          });
-
-          // Count by type
           const byType = {};
           ORG_TYPES.forEach(t => byType[t] = 0);
           coopOrgs.forEach(o => { byType[o.type] = (byType[o.type] || 0) + 1; });
 
-          // Business type breakdown (actual members only)
+          let totalMembers = 0, activeMembers = 0, businessMembers = 0;
+          let coopMemberCount = 0, farmerMemberCount = 0;
           const businessByType = {};
           BUSINESS_TYPES.forEach(t => businessByType[t] = 0);
-          mockMembers.filter(m => m.participateInBusiness && m.businessTypes).forEach(m => {
-            m.businessTypes.split(',').forEach(bt => {
-              const trim = bt.trim();
-              if (businessByType[trim] !== undefined) businessByType[trim]++;
+
+          if (hasSummary) {
+            mockTypeSummary.forEach(s => {
+              const mc = parseInt(s.memberCount) || 0;
+              const bt = parseInt(s.businessTotal) || 0;
+              totalMembers += mc; businessMembers += bt;
+              if (s.category === 'สหกรณ์') coopMemberCount += mc;
+              else farmerMemberCount += mc;
+              businessByType['รับฝากเงิน'] += parseInt(s.bizDeposit) || 0;
+              businessByType['ให้เงินกู้'] += parseInt(s.bizLoan) || 0;
+              businessByType['จัดหาสินค้ามาจำหน่าย'] += parseInt(s.bizSupply) || 0;
+              businessByType['รวบรวมผลผลิต'] += parseInt(s.bizCollect) || 0;
+              businessByType['แปรรูปผลผลิต'] += parseInt(s.bizProcess) || 0;
+              businessByType['ให้บริการ/สวัสดิการ'] += parseInt(s.bizService) || 0;
             });
-          });
+            activeMembers = totalMembers;
+          } else {
+            totalMembers = mockMembers.length;
+            activeMembers = mockMembers.filter(m => m.status === 'ปกติ').length;
+            businessMembers = mockMembers.filter(m => m.participateInBusiness).length;
+          }
 
           resolve({
             success: true,
             data: {
               totalOrgs: coopOrgs.length,
               totalFarmerGroups: farmerOrgsD.length,
-              totalMembers,
-              activeMembers,
-              businessMembers,
-              byType,
-              coopMemberCount,
-              farmerMemberCount,
+              totalMembers, activeMembers, businessMembers,
+              byType, coopMemberCount, farmerMemberCount,
               businessByType,
               activeOrgs: mockOrgs.filter(o => o.status === 'ดำเนินการ').length,
+              summaries: hasSummary ? mockTypeSummary : [],
             },
           });
+          break;
+        }
+        case 'getTypeSummary': {
+          resolve({ success: true, data: mockTypeSummary });
           break;
         }
         default:
@@ -484,6 +494,11 @@ function handleMockPost(action, data) {
           }
           break;
         }
+        case 'saveTypeSummary': {
+          if (data.rows) mockTypeSummary = data.rows;
+          resolve({ success: true, count: mockTypeSummary.length });
+          break;
+        }
         default:
           resolve({ success: false, error: 'Unknown action' });
       }
@@ -513,6 +528,10 @@ const Api = {
 
   // Dashboard
   getDashboard: () => apiGet('getDashboard'),
+
+  // Type Summary
+  getTypeSummary: () => apiGet('getTypeSummary'),
+  saveTypeSummary: (rows) => apiPost('saveTypeSummary', { rows }),
 
   // Admin
   verifyAdmin: (password) => apiPost('verifyAdmin', { password }),

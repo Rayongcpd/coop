@@ -25,6 +25,10 @@ const PAGES = {
     title: 'รายงาน',
     render: renderReports,
   },
+  typeSummary: {
+    title: 'ข้อมูลภาพรวม',
+    render: renderTypeSummary,
+  },
 };
 
 let currentPage = 'dashboard';
@@ -80,6 +84,162 @@ function closeSidebar() {
   const overlay = document.getElementById('sidebarOverlay');
   sidebar.classList.remove('open');
   overlay.classList.remove('active');
+}
+
+// ============================================================
+// Type Summary Page (Editable Table)
+// ============================================================
+
+const ALL_TYPES = [
+  { category: 'สหกรณ์', type: 'สหกรณ์การเกษตร' },
+  { category: 'สหกรณ์', type: 'สหกรณ์ประมง' },
+  { category: 'สหกรณ์', type: 'สหกรณ์นิคม' },
+  { category: 'สหกรณ์', type: 'สหกรณ์ร้านค้า' },
+  { category: 'สหกรณ์', type: 'สหกรณ์บริการ' },
+  { category: 'สหกรณ์', type: 'สหกรณ์ออมทรัพย์' },
+  { category: 'สหกรณ์', type: 'สหกรณ์เครดิตยูเนียน' },
+  { category: 'กลุ่มเกษตรกร', type: 'กลุ่มเกษตรกรทำนา' },
+  { category: 'กลุ่มเกษตรกร', type: 'กลุ่มเกษตรกรทำไร่' },
+  { category: 'กลุ่มเกษตรกร', type: 'กลุ่มเกษตรกรทำสวน' },
+  { category: 'กลุ่มเกษตรกร', type: 'กลุ่มเกษตรกรทำประมง' },
+  { category: 'กลุ่มเกษตรกร', type: 'กลุ่มเกษตรกรเลี้ยงสัตว์' },
+];
+
+async function renderTypeSummary() {
+  const content = document.getElementById('pageContent');
+  content.innerHTML = '<div class="flex-center" style="min-height:300px;"><div class="spinner"></div></div>';
+
+  try {
+    const res = await Api.getTypeSummary();
+    const data = res.success ? res.data : [];
+
+    // Merge with ALL_TYPES template
+    const rows = ALL_TYPES.map(t => {
+      const existing = data.find(d => d.type === t.type);
+      return existing ? { ...t, ...existing } : { ...t, id: '', orgCount: 0, memberCount: 0, businessTotal: 0, bizDeposit: 0, bizLoan: 0, bizSupply: 0, bizCollect: 0, bizProcess: 0, bizService: 0, dataDate: '' };
+    });
+
+    const numInput = (name, val, row) => `<input type="number" class="ts-input" data-row="${row}" data-field="${name}" value="${val || 0}" min="0" ${isAdmin() ? '' : 'disabled'}>`;
+
+    content.innerHTML = `
+      <div class="section-header">
+        <div class="section-title">
+          <span class="material-symbols-rounded">analytics</span>
+          ข้อมูลสมาชิกภาพรวม (แยกตามประเภท)
+        </div>
+        ${isAdmin() ? `<button class="btn btn-primary" onclick="handleSaveTypeSummary()" id="saveSummaryBtn">
+          <span class="material-symbols-rounded">save</span> บันทึกข้อมูล
+        </button>` : ''}
+      </div>
+      <p style="font-size:0.82rem;color:var(--text-secondary);margin-bottom:16px;">
+        <span class="material-symbols-rounded" style="font-size:16px;vertical-align:middle;">info</span>
+        กรอกตัวเลขจำนวนสมาชิกภาพรวมตามประเภท — เมื่อมีข้อมูลรายบุคคลในอนาคต ระบบจะใช้ข้อมูลจริงแทน
+      </p>
+
+      <!-- สหกรณ์ -->
+      <div class="table-wrapper animate-in mb-lg">
+        <div class="table-header"><div class="table-header-left"><div class="table-title">
+          <span class="material-symbols-rounded">apartment</span> สหกรณ์
+        </div></div></div>
+        <div class="table-scroll">
+          <table class="ts-table">
+            <thead><tr>
+              <th>ประเภท</th><th>จำนวนแห่ง</th><th>สมาชิก</th><th>ร่วมธุรกิจ</th>
+              <th>รับฝากเงิน</th><th>ให้เงินกู้</th><th>จัดหาสินค้า</th>
+              <th>รวบรวมผลผลิต</th><th>แปรรูป</th><th>บริการ</th>
+            </tr></thead>
+            <tbody>
+              ${rows.filter(r => r.category === 'สหกรณ์').map((r, i) => `<tr>
+                <td style="font-weight:500;white-space:nowrap;">${r.type.replace('สหกรณ์','').trim()}</td>
+                <td>${numInput('orgCount', r.orgCount, i)}</td>
+                <td>${numInput('memberCount', r.memberCount, i)}</td>
+                <td>${numInput('businessTotal', r.businessTotal, i)}</td>
+                <td>${numInput('bizDeposit', r.bizDeposit, i)}</td>
+                <td>${numInput('bizLoan', r.bizLoan, i)}</td>
+                <td>${numInput('bizSupply', r.bizSupply, i)}</td>
+                <td>${numInput('bizCollect', r.bizCollect, i)}</td>
+                <td>${numInput('bizProcess', r.bizProcess, i)}</td>
+                <td>${numInput('bizService', r.bizService, i)}</td>
+              </tr>`).join('')}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- กลุ่มเกษตรกร -->
+      <div class="table-wrapper animate-in">
+        <div class="table-header"><div class="table-header-left"><div class="table-title">
+          <span class="material-symbols-rounded">eco</span> กลุ่มเกษตรกร
+        </div></div></div>
+        <div class="table-scroll">
+          <table class="ts-table">
+            <thead><tr>
+              <th>ประเภท</th><th>จำนวนกลุ่ม</th><th>สมาชิก</th><th>ร่วมธุรกิจ</th>
+              <th>รับฝากเงิน</th><th>ให้เงินกู้</th><th>จัดหาสินค้า</th>
+              <th>รวบรวมผลผลิต</th><th>แปรรูป</th><th>บริการ</th>
+            </tr></thead>
+            <tbody>
+              ${rows.filter(r => r.category === 'กลุ่มเกษตรกร').map((r, i) => `<tr>
+                <td style="font-weight:500;white-space:nowrap;">${r.type.replace('กลุ่มเกษตรกร','').trim()}</td>
+                <td>${numInput('orgCount', r.orgCount, i + 7)}</td>
+                <td>${numInput('memberCount', r.memberCount, i + 7)}</td>
+                <td>${numInput('businessTotal', r.businessTotal, i + 7)}</td>
+                <td>${numInput('bizDeposit', r.bizDeposit, i + 7)}</td>
+                <td>${numInput('bizLoan', r.bizLoan, i + 7)}</td>
+                <td>${numInput('bizSupply', r.bizSupply, i + 7)}</td>
+                <td>${numInput('bizCollect', r.bizCollect, i + 7)}</td>
+                <td>${numInput('bizProcess', r.bizProcess, i + 7)}</td>
+                <td>${numInput('bizService', r.bizService, i + 7)}</td>
+              </tr>`).join('')}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    `;
+  } catch (err) {
+    console.error('TypeSummary error:', err);
+    content.innerHTML = '<div class="table-empty"><span class="material-symbols-rounded">error</span><p>ไม่สามารถโหลดข้อมูลได้</p></div>';
+  }
+}
+
+async function handleSaveTypeSummary() {
+  const inputs = document.querySelectorAll('.ts-input');
+  const rowData = {};
+  inputs.forEach(inp => {
+    const row = inp.dataset.row;
+    const field = inp.dataset.field;
+    if (!rowData[row]) rowData[row] = {};
+    rowData[row][field] = parseInt(inp.value) || 0;
+  });
+
+  const rows = ALL_TYPES.map((t, i) => ({
+    ...t,
+    id: 'ts' + String(i + 1).padStart(2, '0'),
+    orgCount: rowData[i]?.orgCount || 0,
+    memberCount: rowData[i]?.memberCount || 0,
+    businessTotal: rowData[i]?.businessTotal || 0,
+    bizDeposit: rowData[i]?.bizDeposit || 0,
+    bizLoan: rowData[i]?.bizLoan || 0,
+    bizSupply: rowData[i]?.bizSupply || 0,
+    bizCollect: rowData[i]?.bizCollect || 0,
+    bizProcess: rowData[i]?.bizProcess || 0,
+    bizService: rowData[i]?.bizService || 0,
+    dataDate: new Date().toISOString().split('T')[0],
+  }));
+
+  try {
+    showLoading();
+    const res = await Api.saveTypeSummary(rows);
+    hideLoading();
+    if (res.success) {
+      showToast(`บันทึกข้อมูลสำเร็จ ${res.count || rows.length} ประเภท`, 'success');
+    } else {
+      showToast(res.error || 'เกิดข้อผิดพลาด', 'error');
+    }
+  } catch (err) {
+    hideLoading();
+    showToast('เกิดข้อผิดพลาด', 'error');
+  }
 }
 
 // ============================================================
