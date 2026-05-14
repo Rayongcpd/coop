@@ -39,6 +39,12 @@ let currentPage = 'dashboard';
  */
 function navigateTo(page) {
   if (!PAGES[page]) page = 'dashboard';
+  
+  // Security: Check if page requires admin
+  if (page === 'typeSummary' && !isAdmin()) {
+    page = 'dashboard';
+  }
+
   currentPage = page;
 
   // Update URL hash
@@ -489,8 +495,14 @@ function adminLogout() {
   setAdminState(false);
   updateAdminUI();
   showToast('ออกจากระบบ Admin แล้ว', 'info');
-  // Re-render current page to hide admin buttons
-  if (PAGES[currentPage]) PAGES[currentPage].render();
+  
+  // If on a restricted page, go back to dashboard
+  if (currentPage === 'typeSummary') {
+    navigateTo('dashboard');
+  } else {
+    // Re-render current page to hide admin buttons
+    if (PAGES[currentPage]) PAGES[currentPage].render();
+  }
 }
 
 /**
@@ -498,9 +510,17 @@ function adminLogout() {
  */
 function updateAdminUI() {
   const adminArea = document.getElementById('adminArea');
+  const navTypeSummary = document.getElementById('nav-typeSummary');
   if (!adminArea) return;
 
-  if (isAdmin()) {
+  const admin = isAdmin();
+
+  // Toggle 'ภาพรวม' menu visibility
+  if (navTypeSummary) {
+    navTypeSummary.classList.toggle('hidden', !admin);
+  }
+
+  if (admin) {
     adminArea.innerHTML = `
       <div class="admin-logged-in">
         <div class="admin-badge-row">
