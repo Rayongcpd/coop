@@ -11,9 +11,36 @@ let chartInstances = {};
  */
 async function renderDashboard() {
   const content = document.getElementById('pageContent');
+
   content.innerHTML = `
-    <div class="dashboard-loading flex-center" style="min-height:300px;">
-      <div class="spinner"></div>
+    <!-- Skeleton Summary Stats -->
+    <div class="stats-grid">
+      ${Array(6).fill(0).map(() => `
+        <div class="skeleton-stat-card">
+          <div style="display:flex; justify-content:space-between;">
+            <div class="skeleton skeleton-text short"></div>
+            <div class="skeleton skeleton-circle" style="width:40px; height:40px;"></div>
+          </div>
+          <div class="skeleton skeleton-title"></div>
+          <div class="skeleton skeleton-text short"></div>
+        </div>
+      `).join('')}
+    </div>
+
+    <!-- Skeleton Charts -->
+    <div class="charts-grid">
+      <div class="skeleton-chart-card">
+        <div class="skeleton skeleton-title" style="width:40%"></div>
+        <div class="skeleton skeleton-rect" style="height:300px; margin-top:20px;"></div>
+      </div>
+      <div class="skeleton-chart-card">
+        <div class="skeleton skeleton-title" style="width:40%"></div>
+        <div class="skeleton skeleton-rect" style="height:300px; margin-top:20px;"></div>
+      </div>
+      <div class="skeleton-chart-card">
+        <div class="skeleton skeleton-title" style="width:40%"></div>
+        <div class="skeleton skeleton-rect" style="height:300px; margin-top:20px;"></div>
+      </div>
     </div>
   `;
 

@@ -303,3 +303,19 @@ function getTypeColor(type) {
   };
   return map[type] || 'blue';
 }
+
+/**
+ * Create skeleton table rows HTML.
+ * @param {number} cols - Number of columns.
+ * @param {number} rows - Number of rows.
+ * @returns {string}
+ */
+function createSkeletonTableRows(cols, rows = 5) {
+  return Array(rows).fill(0).map(() => `
+    <tr>
+      ${Array(cols).fill(0).map(() => `
+        <td><div class="skeleton skeleton-text"></div></td>
+      `).join('')}
+    </tr>
+  `).join('');
+}

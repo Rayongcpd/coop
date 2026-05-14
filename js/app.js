@@ -111,9 +111,19 @@ const ALL_TYPES = [
   { category: 'กลุ่มเกษตรกร', type: 'กลุ่มเกษตรกรเลี้ยงสัตว์' },
 ];
 
+
 async function renderTypeSummary() {
   const content = document.getElementById('pageContent');
-  content.innerHTML = '<div class="flex-center" style="min-height:300px;"><div class="spinner"></div></div>';
+  content.innerHTML = `
+    <div class="table-wrapper mb-lg">
+      <div class="skeleton-table-row"><div class="skeleton skeleton-text"></div></div>
+      ${createSkeletonTableRows(10, 7)}
+    </div>
+    <div class="table-wrapper">
+      <div class="skeleton-table-row"><div class="skeleton skeleton-text"></div></div>
+      ${createSkeletonTableRows(10, 5)}
+    </div>
+  `;
 
   try {
     const res = await Api.getTypeSummary();
@@ -255,11 +265,35 @@ async function handleSaveTypeSummary() {
 /**
  * Render the reports page.
  */
+
 async function renderReports() {
   const content = document.getElementById('pageContent');
   content.innerHTML = `
-    <div class="flex-center" style="min-height:300px;">
-      <div class="spinner"></div>
+    <!-- Skeleton Summary Stats -->
+    <div class="stats-grid">
+      ${Array(6).fill(0).map(() => `
+        <div class="skeleton-stat-card" style="height:140px;">
+          <div class="skeleton skeleton-text short"></div>
+          <div class="skeleton skeleton-title"></div>
+          <div class="skeleton skeleton-text short"></div>
+        </div>
+      `).join('')}
+    </div>
+
+    <!-- Skeleton Report Cards -->
+    <div class="report-grid">
+      ${Array(3).fill(0).map(() => `
+        <div class="skeleton-chart-card">
+          <div class="skeleton skeleton-title"></div>
+          ${Array(5).fill(0).map(() => `<div class="skeleton skeleton-text" style="margin-bottom:12px;"></div>`).join('')}
+        </div>
+      `).join('')}
+    </div>
+
+    <!-- Skeleton Table -->
+    <div class="table-wrapper mt-lg">
+      <div class="skeleton-table-row"><div class="skeleton skeleton-text"></div></div>
+      ${createSkeletonTableRows(8, 10)}
     </div>
   `;
 

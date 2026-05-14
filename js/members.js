@@ -46,10 +46,25 @@ async function renderMembers() {
       </select>
     </div>
 
+
     <!-- Members Content Area -->
     <div id="membersContentArea">
       ${memberState.selectedOrgId
-        ? '<div class="flex-center" style="padding:40px;"><div class="spinner"></div></div>'
+        ? `
+        <div class="stats-grid">
+          ${Array(2).fill(0).map(() => `
+            <div class="skeleton-stat-card" style="height:140px;">
+              <div class="skeleton skeleton-text short"></div>
+              <div class="skeleton skeleton-title"></div>
+              <div class="skeleton skeleton-text short"></div>
+            </div>
+          `).join('')}
+        </div>
+        <div class="table-wrapper">
+          <div class="skeleton-table-row"><div class="skeleton skeleton-text"></div></div>
+          ${createSkeletonTableRows(8, 5)}
+        </div>
+        `
         : `<div class="table-empty" style="padding:80px;">
             <span class="material-symbols-rounded" style="font-size:64px;opacity:0.3;">groups</span>
             <p class="mt-md" style="font-size:1rem;">กรุณาเลือกสหกรณ์/กลุ่มเกษตรกร เพื่อดูรายชื่อสมาชิก</p>
@@ -109,9 +124,27 @@ async function renderMembers() {
 /**
  * Load member view for selected organization.
  */
+
 async function loadMemberView() {
   const area = document.getElementById('membersContentArea');
   if (!area) return;
+
+  // Show skeletons
+  area.innerHTML = `
+    <div class="stats-grid">
+      ${Array(2).fill(0).map(() => `
+        <div class="skeleton-stat-card" style="height:140px;">
+          <div class="skeleton skeleton-text short"></div>
+          <div class="skeleton skeleton-title"></div>
+          <div class="skeleton skeleton-text short"></div>
+        </div>
+      `).join('')}
+    </div>
+    <div class="table-wrapper">
+      <div class="skeleton-table-row"><div class="skeleton skeleton-text"></div></div>
+      ${createSkeletonTableRows(8, 5)}
+    </div>
+  `;
 
   try {
     const [orgRes, membersRes] = await Promise.all([

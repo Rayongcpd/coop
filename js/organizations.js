@@ -67,8 +67,9 @@ async function renderOrganizations() {
               <th>จัดการ</th>
             </tr>
           </thead>
+
           <tbody id="orgTableBody">
-            <tr><td colspan="7" class="text-center text-muted" style="padding:40px;">กำลังโหลด...</td></tr>
+            ${createSkeletonTableRows(7, 8)}
           </tbody>
         </table>
       </div>
@@ -117,9 +118,14 @@ async function renderOrganizations() {
 /**
  * Load and render the organization table data.
  */
+
 async function loadOrgTable() {
   const tbody = document.getElementById('orgTableBody');
   const countEl = document.getElementById('orgCount');
+
+  // Show skeletons
+  tbody.innerHTML = createSkeletonTableRows(7, 8);
+  countEl.textContent = '...';
 
   try {
     const res = await Api.getOrganizations({
@@ -407,16 +413,55 @@ async function deleteOrganization(id, name) {
 /**
  * View organization detail.
  */
+
 async function viewOrganization(id) {
   const content = document.getElementById('pageContent');
-  showLoading();
+  
+  // Show skeletons
+  content.innerHTML = `
+    <button class="back-btn" onclick="renderOrganizations()">
+      <span class="material-symbols-rounded">arrow_back</span>
+      กลับไปรายชื่อองค์กร
+    </button>
+    
+    <div class="card mb-lg">
+      <div class="detail-header">
+        <div class="skeleton skeleton-circle" style="width:64px; height:64px;"></div>
+        <div class="detail-info" style="flex:1;">
+          <div class="skeleton skeleton-title"></div>
+          <div class="skeleton skeleton-text medium"></div>
+        </div>
+      </div>
+      <div class="detail-grid mt-md">
+        ${Array(4).fill(0).map(() => `
+          <div class="detail-field">
+            <div class="skeleton skeleton-text short"></div>
+            <div class="skeleton skeleton-text medium"></div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+
+    <div class="stats-grid">
+      ${Array(2).fill(0).map(() => `
+        <div class="skeleton-stat-card" style="height:140px;">
+          <div class="skeleton skeleton-text short"></div>
+          <div class="skeleton skeleton-title"></div>
+          <div class="skeleton skeleton-text short"></div>
+        </div>
+      `).join('')}
+    </div>
+
+    <div class="table-wrapper">
+      ${createSkeletonTableRows(7, 5)}
+    </div>
+  `;
 
   try {
     const [orgRes, membersRes] = await Promise.all([
       Api.getOrganization(id),
       Api.getMembers({ orgId: id }),
     ]);
-    hideLoading();
 
     if (!orgRes.success || !orgRes.data) {
       showToast('ไม่พบข้อมูล', 'error');
