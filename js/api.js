@@ -51,8 +51,8 @@ const BUSINESS_TYPES = [
   'รับฝากเงิน',
   'ให้เงินกู้',
   'จัดหาสินค้ามาจำหน่าย',
-  'รวบรวมผลผลิต',
   'แปรรูปผลผลิต',
+  'รวบรวมผลผลิต',
   'ให้บริการ/สวัสดิการ',
 ];
 
@@ -404,8 +404,8 @@ function handleMockGet(action, params) {
               businessByType['รับฝากเงิน'] += parseInt(s.bizDeposit) || 0;
               businessByType['ให้เงินกู้'] += parseInt(s.bizLoan) || 0;
               businessByType['จัดหาสินค้ามาจำหน่าย'] += parseInt(s.bizSupply) || 0;
-              businessByType['รวบรวมผลผลิต'] += parseInt(s.bizCollect) || 0;
               businessByType['แปรรูปผลผลิต'] += parseInt(s.bizProcess) || 0;
+              businessByType['รวบรวมผลผลิต'] += parseInt(s.bizCollect) || 0;
               businessByType['ให้บริการ/สวัสดิการ'] += parseInt(s.bizService) || 0;
             });
             activeMembers = totalMembers;
