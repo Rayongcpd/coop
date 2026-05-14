@@ -62,7 +62,7 @@ const PROVINCES = ['ระยอง'];
 // Admin Authentication
 // ============================================================
 
-// const DEMO_ADMIN_PASSWORD = 'admin1234'; // REMOVED FOR SECURITY
+// const DEMO_ADMIN_PASSWORD = 'asdfasdf'; // REMOVED FOR SECURITY
 let isAdminLoggedIn = false;
 
 // Restore session on load
@@ -410,10 +410,10 @@ function handleMockGet(action, params) {
               const oc = parseInt(s.orgCount) || 0;
               const mc = parseInt(s.memberCount) || 0;
               const bt = parseInt(s.businessTotal) || 0;
-              
-              totalMembers += mc; 
+
+              totalMembers += mc;
               businessMembers += bt;
-              
+
               if (s.category === 'สหกรณ์') {
                 totalOrgs += oc;
                 coopMemberCount += mc;
