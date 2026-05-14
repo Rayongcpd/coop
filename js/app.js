@@ -310,6 +310,19 @@ async function renderReports() {
           `).join('') : '<p class="text-muted">ไม่มีข้อมูล</p>'}
         </div>
 
+        <div class="report-card animate-in animate-in-delay-1-5">
+          <div class="report-card-title">
+            <span class="material-symbols-rounded">eco</span>
+            จำนวนกลุ่มเกษตรกรแยกตามประเภท
+          </div>
+          ${dash.byFarmerGroupType ? Object.entries(dash.byFarmerGroupType).map(([type, count]) => `
+            <div class="report-item">
+              <span class="report-item-label">${type}</span>
+              <span class="report-item-value">${formatNumber(count)} กลุ่ม</span>
+            </div>
+          `).join('') : '<p class="text-muted">ไม่มีข้อมูล</p>'}
+        </div>
+
         <!-- Business Types Report -->
         <div class="report-card animate-in animate-in-delay-2">
           <div class="report-card-title">

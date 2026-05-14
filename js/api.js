@@ -389,6 +389,10 @@ function handleMockGet(action, params) {
           ORG_TYPES.forEach(t => byType[t] = 0);
           coopOrgs.forEach(o => { byType[o.type] = (byType[o.type] || 0) + 1; });
 
+          const byFarmerGroupType = {};
+          FARMER_GROUP_TYPES.forEach(t => byFarmerGroupType[t] = 0);
+          farmerOrgsD.forEach(o => { byFarmerGroupType[o.type] = (byFarmerGroupType[o.type] || 0) + 1; });
+
           let totalMembers = 0, activeMembers = 0, businessMembers = 0;
           let coopMemberCount = 0, farmerMemberCount = 0;
           let coopBusinessCount = 0, farmerBusinessCount = 0;
@@ -432,7 +436,7 @@ function handleMockGet(action, params) {
               totalOrgs: coopOrgs.length,
               totalFarmerGroups: farmerOrgsD.length,
               totalMembers, activeMembers, businessMembers,
-              byType, coopMemberCount, farmerMemberCount,
+              byType, byFarmerGroupType, coopMemberCount, farmerMemberCount,
               coopBusinessCount, farmerBusinessCount,
               businessByType,
               activeOrgs: mockOrgs.filter(o => o.status === 'ดำเนินการ').length,
