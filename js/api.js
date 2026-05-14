@@ -400,17 +400,32 @@ function handleMockGet(action, params) {
           BUSINESS_TYPES.forEach(t => businessByType[t] = 0);
 
           if (hasSummary) {
+            totalOrgs = 0;
+            totalFarmerGroups = 0;
+            // Reset breakdown to be filled from summary
+            Object.keys(byType).forEach(k => byType[k] = 0);
+            Object.keys(byFarmerGroupType).forEach(k => byFarmerGroupType[k] = 0);
+
             mockTypeSummary.forEach(s => {
+              const oc = parseInt(s.orgCount) || 0;
               const mc = parseInt(s.memberCount) || 0;
               const bt = parseInt(s.businessTotal) || 0;
-              totalMembers += mc; businessMembers += bt;
+              
+              totalMembers += mc; 
+              businessMembers += bt;
+              
               if (s.category === 'สหกรณ์') {
+                totalOrgs += oc;
                 coopMemberCount += mc;
                 coopBusinessCount += bt;
+                if (byType[s.type] !== undefined) byType[s.type] = oc;
               } else {
+                totalFarmerGroups += oc;
                 farmerMemberCount += mc;
                 farmerBusinessCount += bt;
+                if (byFarmerGroupType[s.type] !== undefined) byFarmerGroupType[s.type] = oc;
               }
+
               businessByType['รับฝากเงิน'] += parseInt(s.bizDeposit) || 0;
               businessByType['ให้เงินกู้'] += parseInt(s.bizLoan) || 0;
               businessByType['จัดหาสินค้ามาจำหน่าย'] += parseInt(s.bizSupply) || 0;
