@@ -615,19 +615,29 @@ table {
 }
 
 thead {
-  background: rgba(30, 41, 59, 0.5);
+  background: var(--bg-sidebar); /* Use the refined gray-beige */
   position: sticky;
   top: 0;
   z-index: 20;
 }
 
 th, td {
-  padding: 14px 20px;
+  padding: 16px 20px;
   font-size: 0.875rem;
   border-bottom: 1px solid var(--border-light);
   color: var(--text-primary);
-  white-space: nowrap; /* Keep data on one line by default */
+  white-space: nowrap;
   text-align: left;
+}
+
+th {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  color: var(--text-secondary);
+  border-bottom: 2px solid var(--border-color);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: 0.75rem;
 }
 
 /* Allow primary text columns (like names) to wrap */
@@ -668,7 +678,7 @@ td:last-child {
 }
 
 th:last-child {
-  background: #1e293b; /* Match thead background */
+  background: var(--bg-sidebar); /* Match thead background */
   z-index: 21;
 }
 
