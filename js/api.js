@@ -102,6 +102,7 @@ const MOCK_ORGANIZATIONS = [
     province: 'ระยอง', district: 'เมือง', address: '123 ถ.สุขุมวิท',
     phone: '038-123456', registrationDate: '2010-05-15', status: 'ดำเนินการ',
     createdAt: '2024-01-01', updatedAt: '2024-06-01',
+    totalMembers: 0, activeMembers: 0, businessParticipants: 0,
   },
   {
     id: 'org002', name: 'สหกรณ์ออมทรัพย์ระยอง จำกัด',
@@ -109,6 +110,7 @@ const MOCK_ORGANIZATIONS = [
     province: 'ระยอง', district: 'เมือง', address: '45 ถ.จันทอุดม',
     phone: '038-234567', registrationDate: '2005-03-20', status: 'ดำเนินการ',
     createdAt: '2024-01-01', updatedAt: '2024-06-01',
+    totalMembers: 0, activeMembers: 0, businessParticipants: 0,
   },
   {
     id: 'org003', name: 'สหกรณ์การเกษตรแกลง จำกัด',
@@ -116,6 +118,7 @@ const MOCK_ORGANIZATIONS = [
     province: 'ระยอง', district: 'แกลง', address: '88 ม.3 ต.ทางเกวียน',
     phone: '038-345678', registrationDate: '2012-08-10', status: 'ดำเนินการ',
     createdAt: '2024-01-01', updatedAt: '2024-06-01',
+    totalMembers: 0, activeMembers: 0, businessParticipants: 0,
   },
   {
     id: 'org004', name: 'สหกรณ์ประมงปากน้ำระยอง จำกัด',
@@ -123,6 +126,7 @@ const MOCK_ORGANIZATIONS = [
     province: 'ระยอง', district: 'เมือง', address: '56 ม.5 ต.ปากน้ำ',
     phone: '038-456789', registrationDate: '2015-01-25', status: 'ดำเนินการ',
     createdAt: '2024-01-01', updatedAt: '2024-06-01',
+    totalMembers: 0, activeMembers: 0, businessParticipants: 0,
   },
   {
     id: 'org005', name: 'สหกรณ์นิคมบ้านค่าย จำกัด',
@@ -130,6 +134,7 @@ const MOCK_ORGANIZATIONS = [
     province: 'ระยอง', district: 'บ้านค่าย', address: '12 ม.1 ต.บ้านค่าย',
     phone: '038-567890', registrationDate: '2008-11-30', status: 'ดำเนินการ',
     createdAt: '2024-01-01', updatedAt: '2024-06-01',
+    totalMembers: 120, activeMembers: 108, businessParticipants: 65,
   },
   {
     id: 'org006', name: 'สหกรณ์ร้านค้าชุมชนมาบตาพุด จำกัด',
@@ -137,6 +142,7 @@ const MOCK_ORGANIZATIONS = [
     province: 'ระยอง', district: 'เมือง', address: '78 ม.2 ต.มาบตาพุด',
     phone: '038-678901', registrationDate: '2018-04-12', status: 'เลิก',
     createdAt: '2024-01-01', updatedAt: '2024-06-01',
+    totalMembers: 45, activeMembers: 0, businessParticipants: 0,
   },
   {
     id: 'org007', name: 'สหกรณ์บริการเดินรถระยอง จำกัด',
@@ -144,6 +150,7 @@ const MOCK_ORGANIZATIONS = [
     province: 'ระยอง', district: 'เมือง', address: '200 ถ.ตากสิน',
     phone: '038-789012', registrationDate: '2011-07-07', status: 'ดำเนินการ',
     createdAt: '2024-01-01', updatedAt: '2024-06-01',
+    totalMembers: 85, activeMembers: 78, businessParticipants: 42,
   },
   {
     id: 'org008', name: 'สหกรณ์เครดิตยูเนียนบ้านเพ จำกัด',
@@ -151,6 +158,7 @@ const MOCK_ORGANIZATIONS = [
     province: 'ระยอง', district: 'เมือง', address: '33 ม.4 ต.เพ',
     phone: '038-890123', registrationDate: '2014-09-18', status: 'ดำเนินการ',
     createdAt: '2024-01-01', updatedAt: '2024-06-01',
+    totalMembers: 200, activeMembers: 185, businessParticipants: 150,
   },
   {
     id: 'org009', name: 'กลุ่มเกษตรกรทำนาบ้านฉาง',
@@ -158,6 +166,7 @@ const MOCK_ORGANIZATIONS = [
     province: 'ระยอง', district: 'บ้านฉาง', address: '15 ม.6 ต.บ้านฉาง',
     phone: '038-901234', registrationDate: '2016-02-28', status: 'ดำเนินการ',
     createdAt: '2024-01-01', updatedAt: '2024-06-01',
+    totalMembers: 0, activeMembers: 0, businessParticipants: 0,
   },
   {
     id: 'org010', name: 'กลุ่มเกษตรกรทำสวนวังจันทร์',
@@ -165,6 +174,7 @@ const MOCK_ORGANIZATIONS = [
     province: 'ระยอง', district: 'วังจันทร์', address: '67 ม.8 ต.วังจันทร์',
     phone: '038-012345', registrationDate: '2017-06-15', status: 'ดำเนินการ',
     createdAt: '2024-01-01', updatedAt: '2024-06-01',
+    totalMembers: 0, activeMembers: 0, businessParticipants: 0,
   },
   {
     id: 'org011', name: 'กลุ่มเกษตรกรทำไร่ฝาง',
@@ -172,6 +182,7 @@ const MOCK_ORGANIZATIONS = [
     province: 'ระยอง', district: 'นิคมพัฒนา', address: '99 ม.1 ต.มะขามคู่',
     phone: '038-112233', registrationDate: '2019-10-05', status: 'ดำเนินการ',
     createdAt: '2024-01-01', updatedAt: '2024-06-01',
+    totalMembers: 0, activeMembers: 0, businessParticipants: 0,
   },
   {
     id: 'org012', name: 'กลุ่มเกษตรกรเลี้ยงสัตว์เขาชะเมา',
@@ -179,6 +190,7 @@ const MOCK_ORGANIZATIONS = [
     province: 'ระยอง', district: 'เขาชะเมา', address: '44 ม.3 ต.น้ำเป็น',
     phone: '038-223344', registrationDate: '2020-03-22', status: 'ดำเนินการ',
     createdAt: '2024-01-01', updatedAt: '2024-06-01',
+    totalMembers: 35, activeMembers: 30, businessParticipants: 18,
   },
   {
     id: 'org013', name: 'สหกรณ์การเกษตรปลวกแดง จำกัด',
@@ -186,6 +198,7 @@ const MOCK_ORGANIZATIONS = [
     province: 'ระยอง', district: 'ปลวกแดง', address: '101 ม.2 ต.ปลวกแดง',
     phone: '038-334455', registrationDate: '2009-12-01', status: 'ดำเนินการ',
     createdAt: '2024-01-01', updatedAt: '2024-06-01',
+    totalMembers: 0, activeMembers: 0, businessParticipants: 0,
   },
   {
     id: 'org014', name: 'สหกรณ์ออมทรัพย์สาธารณสุขระยอง จำกัด',
@@ -193,6 +206,7 @@ const MOCK_ORGANIZATIONS = [
     province: 'ระยอง', district: 'เมือง', address: '55 ถ.สุขุมวิท',
     phone: '038-445566', registrationDate: '2007-05-10', status: 'ดำเนินการ',
     createdAt: '2024-01-01', updatedAt: '2024-06-01',
+    totalMembers: 450, activeMembers: 420, businessParticipants: 380,
   },
 ];
 
@@ -352,31 +366,37 @@ function handleMockGet(action, params) {
           break;
         }
         case 'getDashboard': {
-          const totalOrgs = mockOrgs.filter(o => o.category === 'สหกรณ์').length;
-          const totalFarmerGroups = mockOrgs.filter(o => o.category === 'กลุ่มเกษตรกร').length;
-          const totalMembers = mockMembers.length;
-          const activeMembers = mockMembers.filter(m => m.status === 'ปกติ').length;
-          const businessMembers = mockMembers.filter(m => m.participateInBusiness).length;
+          const coopOrgs = mockOrgs.filter(o => o.category === 'สหกรณ์');
+          const farmerOrgsD = mockOrgs.filter(o => o.category === 'กลุ่มเกษตรกร');
+          const coopOrgIdsD = new Set(coopOrgs.map(o => o.id));
+
+          let totalMembers = 0, activeMembers = 0, businessMembers = 0;
+          let coopMemberCount = 0, farmerMemberCount = 0;
+
+          mockOrgs.forEach(org => {
+            const actual = mockMembers.filter(m => m.orgId === org.id);
+            const hasSummary = parseInt(org.totalMembers) > 0;
+            let oT, oA, oB;
+            if (actual.length > 0 && !hasSummary) {
+              oT = actual.length;
+              oA = actual.filter(m => m.status === 'ปกติ').length;
+              oB = actual.filter(m => m.participateInBusiness).length;
+            } else if (hasSummary) {
+              oT = parseInt(org.totalMembers) || 0;
+              oA = parseInt(org.activeMembers) || 0;
+              oB = parseInt(org.businessParticipants) || 0;
+            } else { oT = 0; oA = 0; oB = 0; }
+            totalMembers += oT; activeMembers += oA; businessMembers += oB;
+            if (coopOrgIdsD.has(org.id)) coopMemberCount += oT;
+            else farmerMemberCount += oT;
+          });
 
           // Count by type
           const byType = {};
           ORG_TYPES.forEach(t => byType[t] = 0);
-          mockOrgs.filter(o => o.category === 'สหกรณ์').forEach(o => {
-            byType[o.type] = (byType[o.type] || 0) + 1;
-          });
+          coopOrgs.forEach(o => { byType[o.type] = (byType[o.type] || 0) + 1; });
 
-          // Members per org category
-          const coopMemberCount = mockMembers.filter(m => {
-            const org = mockOrgs.find(o => o.id === m.orgId);
-            return org && org.category === 'สหกรณ์';
-          }).length;
-
-          const farmerMemberCount = mockMembers.filter(m => {
-            const org = mockOrgs.find(o => o.id === m.orgId);
-            return org && org.category === 'กลุ่มเกษตรกร';
-          }).length;
-
-          // Business type breakdown
+          // Business type breakdown (actual members only)
           const businessByType = {};
           BUSINESS_TYPES.forEach(t => businessByType[t] = 0);
           mockMembers.filter(m => m.participateInBusiness && m.businessTypes).forEach(m => {
@@ -389,8 +409,8 @@ function handleMockGet(action, params) {
           resolve({
             success: true,
             data: {
-              totalOrgs,
-              totalFarmerGroups,
+              totalOrgs: coopOrgs.length,
+              totalFarmerGroups: farmerOrgsD.length,
               totalMembers,
               activeMembers,
               businessMembers,

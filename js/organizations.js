@@ -150,8 +150,11 @@ async function loadOrgTable() {
     const allMembers = memberRes.success ? memberRes.data : [];
 
     tbody.innerHTML = orgs.map(org => {
-      const memberCount = allMembers.filter(m => m.orgId === org.id).length;
+      const actualCount = allMembers.filter(m => m.orgId === org.id).length;
+      const hasSummary = parseInt(org.totalMembers) > 0;
+      const effectiveCount = (actualCount > 0 && !hasSummary) ? actualCount : (parseInt(org.totalMembers) || actualCount);
       const color = getTypeColor(org.type);
+      const countLabel = (hasSummary && actualCount === 0) ? `<span class="text-accent" style="font-weight:600;">${effectiveCount}</span> <span style="font-size:0.7rem;opacity:0.6;">ภาพรวม</span>` : `<span class="text-accent" style="font-weight:600;">${effectiveCount}</span> คน`;
       return `
         <tr>
           <td>
@@ -161,7 +164,7 @@ async function loadOrgTable() {
           <td>${escapeHtml(org.category)}</td>
           <td>${escapeHtml(org.province)}</td>
           <td><span class="badge ${getStatusBadgeClass(org.status)}">${escapeHtml(org.status)}</span></td>
-          <td><span class="text-accent" style="font-weight:600;">${memberCount}</span> คน</td>
+          <td>${countLabel}</td>
           <td>
             <div class="action-btns">
               <button class="btn-icon view" title="ดูรายละเอียด" onclick="viewOrganization('${org.id}')">
@@ -269,6 +272,30 @@ async function showOrgForm(orgId) {
         </select>
       </div>
 
+      <div style="border-top:1px solid rgba(148,163,184,0.15);margin:16px 0 8px;padding-top:16px;">
+        <label class="form-label" style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
+          <span class="material-symbols-rounded" style="font-size:18px;">analytics</span>
+          ข้อมูลสมาชิก (ภาพรวม)
+        </label>
+        <p style="font-size:0.78rem;color:var(--text-secondary);margin-bottom:12px;">
+          ใช้เมื่อไม่มีข้อมูลสมาชิกรายบุคคล — ถ้ามีข้อมูลรายบุคคลระบบจะใช้ข้อมูลรายบุคคลแทน (ใส่ 0 ถ้าไม่มีข้อมูล)
+        </p>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">สมาชิกทั้งหมด</label>
+          <input type="number" class="form-input" name="totalMembers" value="${org.totalMembers || 0}" min="0">
+        </div>
+        <div class="form-group">
+          <label class="form-label">สมาชิกปกติ</label>
+          <input type="number" class="form-input" name="activeMembers" value="${org.activeMembers || 0}" min="0">
+        </div>
+        <div class="form-group">
+          <label class="form-label">ร่วมทำธุรกิจ</label>
+          <input type="number" class="form-input" name="businessParticipants" value="${org.businessParticipants || 0}" min="0">
+        </div>
+      </div>
+
       <div class="form-actions">
         <button type="button" class="btn btn-secondary" onclick="closeModal()">ยกเลิก</button>
         <button type="submit" class="btn btn-primary">
@@ -319,6 +346,9 @@ async function handleOrgSubmit(event, orgId) {
     phone: formData.get('phone'),
     registrationDate: formData.get('registrationDate'),
     status: formData.get('status'),
+    totalMembers: parseInt(formData.get('totalMembers')) || 0,
+    activeMembers: parseInt(formData.get('activeMembers')) || 0,
+    businessParticipants: parseInt(formData.get('businessParticipants')) || 0,
   };
 
   try {
@@ -395,9 +425,27 @@ async function viewOrganization(id) {
 
     const org = orgRes.data;
     const members = membersRes.success ? membersRes.data : [];
-    const activeMembers = members.filter(m => m.status === 'ปกติ');
-    const businessMembers = members.filter(m => m.participateInBusiness);
     const color = getTypeColor(org.type);
+
+    // Hybrid: use actual members if available, else use org summary
+    const hasActual = members.length > 0;
+    const hasSummary = parseInt(org.totalMembers) > 0;
+    let dispTotal, dispActive, dispBusiness, dataSource;
+    if (hasActual && !hasSummary) {
+      dispTotal = members.length;
+      dispActive = members.filter(m => m.status === 'ปกติ').length;
+      dispBusiness = members.filter(m => m.participateInBusiness).length;
+      dataSource = 'ข้อมูลรายบุคคล';
+    } else if (hasSummary) {
+      dispTotal = parseInt(org.totalMembers) || 0;
+      dispActive = parseInt(org.activeMembers) || 0;
+      dispBusiness = parseInt(org.businessParticipants) || 0;
+      dataSource = 'ข้อมูลภาพรวม';
+    } else {
+      dispTotal = 0; dispActive = 0; dispBusiness = 0;
+      dataSource = 'ยังไม่มีข้อมูล';
+    }
+    const bizPct = dispTotal > 0 ? Math.round(dispBusiness / dispTotal * 100) : 0;
 
     content.innerHTML = `
       <button class="back-btn" onclick="renderOrganizations()">
@@ -440,10 +488,14 @@ async function viewOrganization(id) {
         </div>
       </div>
 
-      <!-- Member Stats -->
+      <!-- Member Stats (Hybrid) -->
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+        <span class="material-symbols-rounded" style="font-size:16px;color:var(--text-secondary);">info</span>
+        <span style="font-size:0.8rem;color:var(--text-secondary);">แหล่งข้อมูล: ${dataSource}</span>
+      </div>
       <div class="stats-grid">
-        ${createStatCard('groups', 'สมาชิกทั้งหมด', members.length, `ปกติ ${activeMembers.length} คน`, 'blue', 0)}
-        ${createStatCard('handshake', 'ร่วมทำธุรกิจ', businessMembers.length, `${members.length > 0 ? Math.round(businessMembers.length / members.length * 100) : 0}%`, 'green', 1)}
+        ${createStatCard('groups', 'สมาชิกทั้งหมด', dispTotal, `ปกติ ${dispActive} คน`, 'blue', 0)}
+        ${createStatCard('handshake', 'ร่วมทำธุรกิจ', dispBusiness, `${bizPct}%`, 'green', 1)}
       </div>
 
       <!-- Members Table -->
