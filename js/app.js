@@ -146,7 +146,7 @@ async function renderTypeSummary() {
             <thead><tr>
               <th>ประเภท</th><th>จำนวนแห่ง</th><th>สมาชิก</th><th>ร่วมธุรกิจ</th>
               <th>รับฝากเงิน</th><th>ให้เงินกู้</th><th>จัดหาสินค้า</th>
-              <th>รวบรวมผลผลิต</th><th>แปรรูป</th><th>บริการ</th>
+              <th>แปรรูป</th><th>รวบรวมผลผลิต</th><th>บริการ</th>
             </tr></thead>
             <tbody>
               ${rows.filter(r => r.category === 'สหกรณ์').map((r, i) => `<tr>
@@ -157,8 +157,8 @@ async function renderTypeSummary() {
                 <td>${numInput('bizDeposit', r.bizDeposit, i)}</td>
                 <td>${numInput('bizLoan', r.bizLoan, i)}</td>
                 <td>${numInput('bizSupply', r.bizSupply, i)}</td>
-                <td>${numInput('bizCollect', r.bizCollect, i)}</td>
                 <td>${numInput('bizProcess', r.bizProcess, i)}</td>
+                <td>${numInput('bizCollect', r.bizCollect, i)}</td>
                 <td>${numInput('bizService', r.bizService, i)}</td>
               </tr>`).join('')}
             </tbody>
@@ -176,7 +176,7 @@ async function renderTypeSummary() {
             <thead><tr>
               <th>ประเภท</th><th>จำนวนกลุ่ม</th><th>สมาชิก</th><th>ร่วมธุรกิจ</th>
               <th>รับฝากเงิน</th><th>ให้เงินกู้</th><th>จัดหาสินค้า</th>
-              <th>รวบรวมผลผลิต</th><th>แปรรูป</th><th>บริการ</th>
+              <th>แปรรูป</th><th>รวบรวมผลผลิต</th><th>บริการ</th>
             </tr></thead>
             <tbody>
               ${rows.filter(r => r.category === 'กลุ่มเกษตรกร').map((r, i) => `<tr>
@@ -187,8 +187,8 @@ async function renderTypeSummary() {
                 <td>${numInput('bizDeposit', r.bizDeposit, i + 7)}</td>
                 <td>${numInput('bizLoan', r.bizLoan, i + 7)}</td>
                 <td>${numInput('bizSupply', r.bizSupply, i + 7)}</td>
-                <td>${numInput('bizCollect', r.bizCollect, i + 7)}</td>
                 <td>${numInput('bizProcess', r.bizProcess, i + 7)}</td>
+                <td>${numInput('bizCollect', r.bizCollect, i + 7)}</td>
                 <td>${numInput('bizService', r.bizService, i + 7)}</td>
               </tr>`).join('')}
             </tbody>
